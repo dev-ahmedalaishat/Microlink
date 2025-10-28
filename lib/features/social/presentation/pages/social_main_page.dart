@@ -8,6 +8,8 @@ import '../../../../core/theme/text_styles.dart';
 import '../../domain/entities/post.dart';
 import '../cubit/posts/posts_cubit.dart';
 import '../cubit/posts/posts_state.dart';
+import '../widgets/post_card.dart';
+import '../widgets/my_post_card.dart';
 
 class SocialMainPage extends StatefulWidget {
   const SocialMainPage({super.key});
@@ -179,112 +181,25 @@ class _SocialMainPageState extends State<SocialMainPage>
               itemCount: posts.length,
               itemBuilder: (context, index) {
                 final post = posts[index];
-                return Card(
-                  margin: const EdgeInsets.only(bottom: AppSpacing.md),
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.cardPadding),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Post header
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundColor: AppColors.primary,
-                              child: Text(
-                                post.author.name[0].toUpperCase(),
-                                style: const TextStyle(
-                                  color: AppColors.textOnPrimary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: AppSpacing.sm),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    post.author.name,
-                                    style: AppTextStyles.userName,
-                                  ),
-                                  Text(
-                                    _formatTimeAgo(post.createdAt),
-                                    style: AppTextStyles.timestamp,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.more_vert),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
-                        
-                        const SizedBox(height: AppSpacing.md),
-                        
-                        // Post content
-                        Text(
-                          post.content,
-                          style: AppTextStyles.postContent,
-                        ),
-                        
-                        // Media if available
-                        if (post.mediaUrls.isNotEmpty) ...[
-                          const SizedBox(height: AppSpacing.md),
-                          Container(
-                            height: 200,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(
-                              Icons.image,
-                              size: 50,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                        
-                        const SizedBox(height: AppSpacing.md),
-                        
-                        // Post interactions
-                        Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                // Handle like toggle - using mock user ID
-                                context.read<PostsCubit>().toggleLike(post.id, '1');
-                              },
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    post.isLiked ? Icons.favorite : Icons.favorite_border,
-                                    color: post.isLiked ? AppColors.liked : AppColors.iconInactive,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text('${post.likesCount}'),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: AppSpacing.lg),
-                            Row(
-                              children: [
-                                const Icon(Icons.chat_bubble_outline),
-                                const SizedBox(width: 4),
-                                Text('${post.commentsCount}'),
-                              ],
-                            ),
-                            const Spacer(),
-                            const Icon(Icons.send),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                return PostCard(
+                  post: post,
+                  onLikeTap: () {
+                    context.read<PostsCubit>().toggleLike(post.id, '1');
+                  },
+                  onCommentTap: () {
+                    // TODO: Navigate to comments
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Comments coming soon!')),
+                    );
+                  },
+                  onShareTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Share coming soon!')),
+                    );
+                  },
+                  onMoreTap: () {
+                    // TODO: Show more options
+                  },
                 );
               },
             ),
@@ -334,74 +249,14 @@ class _SocialMainPageState extends State<SocialMainPage>
                   itemCount: posts.length,
                   itemBuilder: (context, index) {
                     final post = posts[index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: AppSpacing.md),
-                      child: Padding(
-                        padding: const EdgeInsets.all(AppSpacing.cardPadding),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: post.status == PostStatus.approved
-                                        ? Colors.green.withOpacity(0.1)
-                                        : Colors.orange.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(
-                                    post.status.name.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: post.status == PostStatus.approved
-                                          ? Colors.green
-                                          : Colors.orange,
-                                    ),
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  _formatTimeAgo(post.createdAt),
-                                  style: AppTextStyles.timestamp,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: AppSpacing.sm),
-                            Text(
-                              post.content,
-                              style: AppTextStyles.postContent,
-                            ),
-                            if (post.status == PostStatus.approved) ...[
-                              const SizedBox(height: AppSpacing.sm),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.favorite,
-                                    size: 16,
-                                    color: AppColors.iconInactive,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text('${post.likesCount}'),
-                                  const SizedBox(width: AppSpacing.md),
-                                  Icon(
-                                    Icons.chat_bubble_outline,
-                                    size: 16,
-                                    color: AppColors.iconInactive,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text('${post.commentsCount}'),
-                                ],
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
+                    return MyPostCard(
+                      post: post,
+                      onTap: () {
+                        // TODO: Navigate to post details or edit
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Tapped on ${post.status.name} post')),
+                        );
+                      },
                     );
                   },
                 ),

@@ -244,6 +244,127 @@ class PostsState with _$PostsState {
 - Follow **Clean Architecture** separation of concerns
 - Write **comprehensive tests** for business logic
 - Use **consistent naming conventions** across the codebase
+- **Separate widgets** into reusable components with clear responsibilities
+
+## 🧩 Widget Architecture (Clean Code Implementation)
+
+### Separated Widget Components
+The social feed implementation follows a **clean, modular approach** with separated widgets:
+
+#### PostCard Widget
+```dart
+class PostCard extends StatelessWidget {
+  final Post post;
+  final VoidCallback? onLikeTap;
+  final VoidCallback? onCommentTap;
+  final VoidCallback? onShareTap;
+  final VoidCallback? onMoreTap;
+  
+  // Clean separation: only accepts post data and callbacks
+}
+```
+
+#### MyPostCard Widget  
+```dart
+class MyPostCard extends StatelessWidget {
+  final Post post;
+  final VoidCallback? onTap;
+  
+  // Specialized for user's own posts with status indicators
+}
+```
+
+### Benefits of Separated Widgets
+- **Single Responsibility:** Each widget has one clear purpose
+- **Reusability:** Components can be used across different screens
+- **Maintainability:** Easy to modify individual components
+- **Testing:** Widgets can be tested independently
+- **Clean Code:** Main page focuses on layout, not implementation details
+
+### Implementation Guidelines
+1. **Pass only necessary data** - avoid passing entire contexts or complex objects
+2. **Use callbacks for interactions** - parent handles business logic
+3. **Keep widgets focused** - one widget, one responsibility
+4. **Consistent naming** - clear, descriptive widget names
+5. **Document parameters** - clear documentation for each widget's purpose
+6. **Always use widget extensions** - leverage the comprehensive extension system
+
+## 🔧 Widget Extensions System
+
+### Core Extensions Used
+The app utilizes a comprehensive widget extensions system (`lib/core/extensions/widget_extensions.dart`) for consistent styling:
+
+#### Spacing Extensions
+```dart
+// Instead of: const SizedBox(height: 12)
+Text('Content').spaceM()  // Adds 12px spacing below
+
+// Instead of: Padding(padding: EdgeInsets.all(16), child: widget)
+widget.paddingL()  // Adds 16px padding all around
+```
+
+#### Card Extensions
+```dart
+// Instead of: Card(elevation: 4, shape: RoundedRectangleBorder(...))
+content.cardM(radius: 12.0)  // Medium elevation with custom radius
+```
+
+#### Margin Extensions
+```dart
+// Instead of: Container(margin: EdgeInsets.only(bottom: 12), child: widget)
+widget.marginOnly(bottom: 12.0)  // Clean margin application
+```
+
+#### Gesture Extensions
+```dart
+// Instead of: GestureDetector(onTap: callback, child: widget)
+widget.onTap(callback)  // Simple tap gesture
+```
+
+### Extension Categories Available
+- **Padding:** `paddingXS()`, `paddingS()`, `paddingM()`, `paddingL()`, `paddingXL()`
+- **Spacing:** `spaceXS()`, `spaceS()`, `spaceM()`, `spaceL()`, `spaceXL()`
+- **Cards:** `cardFlat()`, `cardS()`, `cardM()`, `cardL()`, `cardXL()`
+- **Sizing:** `avatarSize()`, `buttonHeight()`, `iconL()`, `fullWidth()`
+- **Styling:** `borderRadius()`, `opacity()`, `background()`
+- **Layout:** `center()`, `expanded()`, `flexible()`
+- **Gestures:** `onTap()`, `onLongPress()`
+
+### Real Implementation Example
+```dart
+// Before (verbose, manual styling):
+Card(
+  margin: EdgeInsets.only(bottom: 12),
+  child: Padding(
+    padding: EdgeInsets.all(16),
+    child: Column(
+      children: [
+        header,
+        SizedBox(height: 12),
+        content,
+        SizedBox(height: 8),
+        actions,
+      ],
+    ),
+  ),
+)
+
+// After (clean, extension-based):
+Column(
+  children: [
+    header,
+    content.spaceM(),
+    actions.spaceS(),
+  ],
+).paddingL().cardM(radius: 12.0).marginOnly(bottom: 12.0)
+```
+
+### Benefits of Extension System
+- **Consistency:** Predefined spacing values from `AppConstants`
+- **Readability:** Fluent, chainable API
+- **Maintainability:** Single source of truth for styling
+- **Performance:** No extra widget wrapping overhead
+- **Developer Experience:** IntelliSense support and easy discovery
 
 ### Performance Considerations
 - Implement **image caching** for network images
