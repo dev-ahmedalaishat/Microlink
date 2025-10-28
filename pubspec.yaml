@@ -10,10 +10,34 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # Architecture & State Management
+  flutter_bloc: ^8.1.3          # Cubit/Bloc state management
+  get_it: ^7.6.4                # Service locator for DI
+  
+  # Code Generation & Data Classes
+  freezed_annotation: ^2.4.1    # Immutable classes annotations
+  json_annotation: ^4.8.1       # JSON serialization annotations
+  
+  # Navigation
+  go_router: ^14.6.0            # Declarative routing
+  
+  # UI & Media
+  image_picker: ^1.0.4          # Camera/gallery access
+  cached_network_image: ^3.3.0  # Image caching and display
+  flutter_spinkit: ^5.2.0       # Loading animations
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  
+  # Code Generation
+  freezed: ^2.4.7               # Code generation for data classes
+  json_serializable: ^6.7.1     # JSON serialization code generation
+  build_runner: ^2.4.7          # Code generation runner
+  
+  # Testing
+  bloc_test: ^9.1.4             # Cubit/Bloc testing utilities
 
 flutter:
   uses-material-design: true
