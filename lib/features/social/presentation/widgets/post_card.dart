@@ -29,10 +29,13 @@ class PostCard extends StatefulWidget {
   State<PostCard> createState() => _PostCardState();
 }
 
-class _PostCardState extends State<PostCard>
-    with SingleTickerProviderStateMixin {
+class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
   late AnimationController _likeAnimationController;
+  late AnimationController _commentAnimationController;
+  late AnimationController _shareAnimationController;
   late Animation<double> _likeScaleAnimation;
+  late Animation<double> _commentScaleAnimation;
+  late Animation<double> _shareScaleAnimation;
 
   @override
   void initState() {
@@ -41,9 +44,30 @@ class _PostCardState extends State<PostCard>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
+    _commentAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _shareAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
     _likeScaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
       CurvedAnimation(
         parent: _likeAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+    _commentScaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(
+        parent: _commentAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+    _shareScaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(
+        parent: _shareAnimationController,
         curve: Curves.easeInOut,
       ),
     );
@@ -52,6 +76,8 @@ class _PostCardState extends State<PostCard>
   @override
   void dispose() {
     _likeAnimationController.dispose();
+    _commentAnimationController.dispose();
+    _shareAnimationController.dispose();
     super.dispose();
   }
 
@@ -60,6 +86,20 @@ class _PostCardState extends State<PostCard>
       _likeAnimationController.reverse();
     });
     widget.onLikeTap?.call();
+  }
+
+  void _handleCommentTap(BuildContext context) {
+    _commentAnimationController.forward().then((_) {
+      _commentAnimationController.reverse();
+    });
+    _showCommentsBottomSheet(context);
+  }
+
+  void _handleShareTap() {
+    _shareAnimationController.forward().then((_) {
+      _shareAnimationController.reverse();
+    });
+    widget.onShareTap?.call();
   }
 
   @override
@@ -158,25 +198,26 @@ class _PostCardState extends State<PostCard>
                 _handleLikeTap,
               ),
             ),
-            SpacerH.xs,
             _buildCountBadge(context, widget.post.likesCount),
           ],
         ),
-        SpacerH.m,
+        SpacerH.xs,
         Row(
           children: [
-            _buildIconButton(
-              'assets/icons/ic_comment.svg',
-              () => _showCommentsBottomSheet(context),
+            ScaleTransition(
+              scale: _commentScaleAnimation,
+              child: _buildIconButton(
+                'assets/icons/ic_comment.svg',
+                () => _handleCommentTap(context),
+              ),
             ),
-            SpacerH.xs,
             _buildCountBadge(context, widget.post.commentsCount),
           ],
         ),
-        SpacerH.m,
-        _buildIconButton(
-          'assets/icons/ic_share.svg',
-          () => widget.onShareTap?.call(),
+        SpacerH.xs,
+        ScaleTransition(
+          scale: _shareScaleAnimation,
+          child: _buildIconButton('assets/icons/ic_share.svg', _handleShareTap),
         ),
       ],
     );
@@ -185,27 +226,34 @@ class _PostCardState extends State<PostCard>
   Widget _buildIconButton(String iconPath, VoidCallback? onTap) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+      borderRadius: BorderRadius.circular(AppSpacing.radiusCircular),
       child: SvgPicture.asset(
         iconPath,
         width: AppConstants.iconM,
         height: AppConstants.iconM,
         matchTextDirection: false,
-      ),
+      ).paddingAll(AppSpacing.sm),
     );
   }
 
   Widget _buildCountBadge(BuildContext context, int count) {
-    return Text(
-          '$count',
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-        )
-        .sized(height: AppConstants.iconM)
-        .paddingSymmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs)
-        .background(Theme.of(context).colorScheme.onSurface.withAlpha(13))
-        .radiusXL();
+    return Transform.translate(
+      offset: const Offset(-4, 0),
+      child:
+          Text(
+                '$count',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+              )
+              .sized(height: AppConstants.iconM)
+              .paddingSymmetric(
+                horizontal: AppSpacing.sm,
+                vertical: AppSpacing.xs,
+              )
+              .background(Theme.of(context).colorScheme.onSurface.withAlpha(13))
+              .radiusXL(),
+    );
   }
 
   void _showCommentsBottomSheet(BuildContext context) {
