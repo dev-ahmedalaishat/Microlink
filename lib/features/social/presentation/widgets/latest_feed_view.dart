@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:microlink/core/extensions/widget_extensions.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/theme/spacing.dart';
 import '../../domain/entities/post.dart';
@@ -62,9 +63,7 @@ class _LatestFeedSuccess extends StatelessWidget {
               );
             },
             onShareTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Share coming soon!')),
-              );
+              Share.share('${post.content}\n\n— ${post.author.name}');
             },
           );
         },

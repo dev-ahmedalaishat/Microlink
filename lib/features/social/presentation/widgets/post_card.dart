@@ -5,9 +5,11 @@ import 'package:microlink/core/extensions/date_extensions.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/presentation/story_avatar_v2.dart';
 import 'package:microlink/core/theme/spacing.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/extensions/widget_extensions.dart';
 import '../../domain/entities/post.dart';
+import 'comments_bottom_sheet.dart';
 
 class PostCard extends StatefulWidget {
   final Post post;
@@ -165,14 +167,17 @@ class _PostCardState extends State<PostCard>
           children: [
             _buildIconButton(
               'assets/icons/ic_comment.svg',
-              widget.onCommentTap,
+              () => _showCommentsBottomSheet(context),
             ),
             SpacerH.xs,
             _buildCountBadge(context, widget.post.commentsCount),
           ],
         ),
         SpacerH.m,
-        _buildIconButton('assets/icons/ic_share.svg', widget.onShareTap),
+        _buildIconButton(
+          'assets/icons/ic_share.svg',
+          () => widget.onShareTap?.call(),
+        ),
       ],
     );
   }
@@ -201,5 +206,16 @@ class _PostCardState extends State<PostCard>
         .paddingSymmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs)
         .background(Theme.of(context).colorScheme.onSurface.withAlpha(13))
         .radiusXL();
+  }
+
+  void _showCommentsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      isDismissible: true,
+      enableDrag: true,
+      builder: (context) => CommentsBottomSheet(postId: widget.post.id),
+    );
   }
 }
