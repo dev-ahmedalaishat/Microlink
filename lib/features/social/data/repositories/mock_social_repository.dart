@@ -90,9 +90,15 @@ class MockSocialRepository implements SocialRepository {
   }
 
   @override
-  Future<List<Post>> getLatestPosts({int page = 1, int limit = 10}) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 800));
+  Future<List<Post>> getLatestPosts({
+    int page = 1,
+    int limit = 10,
+    bool forceRefresh = false,
+  }) async {
+    if (forceRefresh) {
+      // Simulate network delay
+      await Future.delayed(const Duration(milliseconds: 800));
+    }
 
     // Return only approved posts
     final approvedPosts = _mockPosts

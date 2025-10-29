@@ -13,16 +13,22 @@ class LatestFeedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PostsCubit, PostsState>(
-      builder: (context, state) {
-        return state.when(
-          initial: () => const Center(child: Text('Welcome to Social Feed')),
-          loading: () => const Center(child: CircularProgressIndicator()),
-          success: (posts) => _LatestFeedSuccess(posts: posts),
-          error: (message) => _LatestFeedError(message: message),
-        );
-      },
-    );
+    return Column(
+      children: [
+        Divider(height: 1),
+        BlocBuilder<PostsCubit, PostsState>(
+          builder: (context, state) {
+            return state.when(
+              initial: () =>
+                  const Center(child: Text('Welcome to Social Feed')),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              success: (posts) => _LatestFeedSuccess(posts: posts),
+              error: (message) => _LatestFeedError(message: message),
+            );
+          },
+        ).expanded(),
+      ],
+    ).expanded();
   }
 }
 
@@ -33,12 +39,12 @@ class _LatestFeedSuccess extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
+    return RefreshIndicator.adaptive(
       onRefresh: () async {
         context.read<PostsCubit>().refreshPosts();
       },
+
       child: ListView.separated(
-        // padding: const EdgeInsets.all(AppSpacing.screenPadding),
         itemCount: posts.length,
         separatorBuilder: (context, index) =>
             const Divider(height: 1).screenPadding(),

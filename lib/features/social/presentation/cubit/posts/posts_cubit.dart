@@ -7,10 +7,18 @@ class PostsCubit extends Cubit<PostsState> {
 
   PostsCubit(this._repository) : super(const PostsState.initial());
 
-  Future<void> loadLatestPosts({int page = 1, int limit = 10}) async {
+  Future<void> loadLatestPosts({
+    int page = 1,
+    int limit = 10,
+    bool forceRefresh = true,
+  }) async {
     try {
       emit(const PostsState.loading());
-      final posts = await _repository.getLatestPosts(page: page, limit: limit);
+      final posts = await _repository.getLatestPosts(
+        page: page,
+        limit: limit,
+        forceRefresh: forceRefresh,
+      );
       emit(PostsState.success(posts));
     } catch (e) {
       emit(PostsState.error(e.toString()));
@@ -25,7 +33,7 @@ class PostsCubit extends Cubit<PostsState> {
     try {
       await _repository.toggleLike(postId: postId, userId: userId);
       // Refresh posts to update like count
-      await refreshPosts();
+      await loadLatestPosts(forceRefresh: false);
     } catch (e) {
       emit(PostsState.error('Failed to toggle like: ${e.toString()}'));
     }
@@ -37,7 +45,11 @@ class MyPostsCubit extends Cubit<MyPostsState> {
 
   MyPostsCubit(this._repository) : super(const MyPostsState.initial());
 
-  Future<void> loadMyPosts(String userId, {int page = 1, int limit = 10}) async {
+  Future<void> loadMyPosts(
+    String userId, {
+    int page = 1,
+    int limit = 10,
+  }) async {
     try {
       emit(const MyPostsState.loading());
       final posts = await _repository.getMyPosts(
@@ -59,7 +71,8 @@ class MyPostsCubit extends Cubit<MyPostsState> {
 class PostCreationCubit extends Cubit<PostCreationState> {
   final SocialRepository _repository;
 
-  PostCreationCubit(this._repository) : super(const PostCreationState.initial());
+  PostCreationCubit(this._repository)
+    : super(const PostCreationState.initial());
 
   Future<void> createPost({
     required String content,

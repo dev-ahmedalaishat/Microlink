@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:microlink/core/theme/spacing.dart';
 import '../../../../core/extensions/widget_extensions.dart';
 import '../../../../core/theme/color_palette.dart';
 import '../../../../core/theme/text_styles.dart';
@@ -44,6 +45,8 @@ class _SocialMainPageState extends State<SocialMainPage>
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/'),
         ),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        foregroundColor: Theme.of(context).colorScheme.surface,
         actions: [
           IconButton(icon: const Icon(Icons.notifications), onPressed: () {}),
         ],
@@ -67,6 +70,8 @@ class _SocialMainPageState extends State<SocialMainPage>
           // Tab Bar
           _buildTabBar(),
 
+          Divider(height: 1),
+
           // Tab Content
           TabBarView(
             controller: _tabController,
@@ -85,16 +90,25 @@ class _SocialMainPageState extends State<SocialMainPage>
   Widget _buildTabBar() {
     return TabBar(
       controller: _tabController,
-      labelColor: AppColors.primary,
-      unselectedLabelColor: AppColors.textSecondary,
-      labelStyle: AppTextStyles.tabActive,
-      unselectedLabelStyle: AppTextStyles.tabInactive,
+      labelColor: Theme.of(context).colorScheme.onSurface,
+      unselectedLabelColor: Theme.of(
+        context,
+      ).colorScheme.onSurface.withAlpha(154),
+      labelStyle: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
+      unselectedLabelStyle: Theme.of(context).textTheme.bodyMedium,
       indicator: const UnderlineTabIndicator(
         borderSide: BorderSide(color: AppColors.primary, width: 3),
       ),
-      tabs: const [
-        Tab(text: 'Latest'),
-        Tab(text: 'My posts'),
+      dividerColor: Colors.transparent,
+      dividerHeight: 1,
+      tabAlignment: TabAlignment.center,
+      tabs: [
+        const Tab(text: 'Latest').paddingSymmetric(horizontal: AppSpacing.xxxl),
+        const Tab(
+          text: 'My Posts',
+        ).paddingSymmetric(horizontal: AppSpacing.xxl),
       ],
     );
   }

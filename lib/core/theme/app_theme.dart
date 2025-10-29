@@ -12,7 +12,7 @@ class AppTheme {
     colorScheme: const ColorScheme.light(
       primary: AppColors.primary,
       secondary: AppColors.accent,
-      surface: AppColors.surface,
+      surface: AppColors.background,
       surfaceContainer: AppColors.accent,
       error: AppColors.error,
       onPrimary: AppColors.textOnPrimary,
@@ -118,10 +118,7 @@ class AppTheme {
       labelStyle: AppTextStyles.tabActive,
       unselectedLabelStyle: AppTextStyles.tabInactive,
       indicator: UnderlineTabIndicator(
-        borderSide: BorderSide(
-          color: AppColors.primary,
-          width: 3,
-        ),
+        borderSide: BorderSide(color: AppColors.primary, width: 3),
       ),
     ),
 
@@ -137,10 +134,7 @@ class AppTheme {
     ),
 
     // Icon Theme
-    iconTheme: const IconThemeData(
-      color: AppColors.iconActive,
-      size: 24,
-    ),
+    iconTheme: const IconThemeData(color: AppColors.iconActive, size: 24),
 
     // Divider Theme
     dividerTheme: const DividerThemeData(

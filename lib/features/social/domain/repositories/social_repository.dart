@@ -3,7 +3,7 @@ import '../entities/user.dart';
 
 abstract class SocialRepository {
   // Posts
-  Future<List<Post>> getLatestPosts({int page = 1, int limit = 10});
+  Future<List<Post>> getLatestPosts({int page = 1, int limit = 10, bool forceRefresh = false});
   Future<List<Post>> getMyPosts({required String userId, int page = 1, int limit = 10});
   Future<Post> createPost({
     required String content,
