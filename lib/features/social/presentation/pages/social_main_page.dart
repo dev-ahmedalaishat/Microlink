@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
+import '../../../../core/extensions/widget_extensions.dart';
 import '../../../../core/theme/color_palette.dart';
-import '../../../../core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
-import '../../domain/entities/post.dart';
 import '../cubit/posts/posts_cubit.dart';
-import '../cubit/posts/posts_state.dart';
-import '../widgets/post_card.dart';
-import '../widgets/my_post_card.dart';
+import '../widgets/latest_feed_view.dart';
+import '../widgets/my_posts_feed_view.dart';
+import '../widgets/stories_section.dart';
 
 class SocialMainPage extends StatefulWidget {
   const SocialMainPage({super.key});
@@ -26,7 +24,7 @@ class _SocialMainPageState extends State<SocialMainPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    
+
     // Load initial data
     context.read<PostsCubit>().loadLatestPosts();
   }
@@ -47,105 +45,40 @@ class _SocialMainPageState extends State<SocialMainPage>
           onPressed: () => context.go('/'),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.notifications), onPressed: () {}),
         ],
       ),
       body: Column(
         children: [
-          // Stories Section
-          _buildStoriesSection(),
-          
+          // // Stories Section
+          // StoriesSection(
+          //   stories: const [
+          //     StoryItem(label: 'TSC'),
+          //     StoryItem(label: 'Micropolis'),
+          //     StoryItem(label: 'Garden'),
+          //   ],
+          //   onAddStory: () {
+          //     ScaffoldMessenger.of(context).showSnackBar(
+          //       const SnackBar(content: Text('Add story coming soon!')),
+          //     );
+          //   },
+          // ),
+
           // Tab Bar
           _buildTabBar(),
-          
+
           // Tab Content
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildLatestFeed(),
-                _buildMyPostsFeed(),
-              ],
-            ),
-          ),
+          TabBarView(
+            controller: _tabController,
+            children: const [LatestFeedView(), MyPostsFeedView()],
+          ).expanded(),
         ],
       ),
-      
+
       // Bottom Navigation with FAB
       bottomNavigationBar: _buildBottomNavigation(),
       floatingActionButton: _buildFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-    );
-  }
-
-  Widget _buildStoriesSection() {
-    return Container(
-      height: 100,
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
-        children: [
-          _buildStoryItem(
-            label: 'Your story',
-            hasAddIcon: true,
-          ),
-          _buildStoryItem(
-            label: 'TSC',
-            color: AppColors.primary,
-          ),
-          _buildStoryItem(
-            label: 'Micropolis',
-            color: Colors.orange,
-          ),
-          _buildStoryItem(
-            label: 'Garden',
-            color: Colors.blue,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStoryItem({
-    required String label,
-    Color? color,
-    bool hasAddIcon = false,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(right: AppSpacing.md),
-      width: 70,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: color ?? Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: AppColors.storyBorder,
-                width: 2,
-              ),
-            ),
-            child: hasAddIcon
-                ? const Icon(Icons.add, color: Colors.white)
-                : null,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: AppTextStyles.caption,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
     );
   }
 
@@ -163,117 +96,6 @@ class _SocialMainPageState extends State<SocialMainPage>
         Tab(text: 'Latest'),
         Tab(text: 'My posts'),
       ],
-    );
-  }
-
-  Widget _buildLatestFeed() {
-    return BlocBuilder<PostsCubit, PostsState>(
-      builder: (context, state) {
-        return state.when(
-          initial: () => const Center(child: Text('Welcome to Social Feed')),
-          loading: () => const Center(child: CircularProgressIndicator()),
-          success: (posts) => RefreshIndicator(
-            onRefresh: () async {
-              context.read<PostsCubit>().refreshPosts();
-            },
-            child: ListView.builder(
-              padding: const EdgeInsets.all(AppSpacing.screenPadding),
-              itemCount: posts.length,
-              itemBuilder: (context, index) {
-                final post = posts[index];
-                return PostCard(
-                  post: post,
-                  onLikeTap: () {
-                    context.read<PostsCubit>().toggleLike(post.id, '1');
-                  },
-                  onCommentTap: () {
-                    // TODO: Navigate to comments
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Comments coming soon!')),
-                    );
-                  },
-                  onShareTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Share coming soon!')),
-                    );
-                  },
-                  onMoreTap: () {
-                    // TODO: Show more options
-                  },
-                );
-              },
-            ),
-          ),
-          error: (message) => Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Error: $message'),
-                ElevatedButton(
-                  onPressed: () => context.read<PostsCubit>().refreshPosts(),
-                  child: const Text('Retry'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildMyPostsFeed() {
-    return BlocBuilder<MyPostsCubit, MyPostsState>(
-      builder: (context, state) {
-        return state.when(
-          initial: () => Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('My Posts'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    // Load posts for mock user ID '1'
-                    context.read<MyPostsCubit>().loadMyPosts('1');
-                  },
-                  child: const Text('Load My Posts'),
-                ),
-              ],
-            ),
-          ),
-          loading: () => const Center(child: CircularProgressIndicator()),
-          success: (posts) => posts.isEmpty
-              ? const Center(child: Text('No posts yet'))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(AppSpacing.screenPadding),
-                  itemCount: posts.length,
-                  itemBuilder: (context, index) {
-                    final post = posts[index];
-                    return MyPostCard(
-                      post: post,
-                      onTap: () {
-                        // TODO: Navigate to post details or edit
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Tapped on ${post.status.name} post')),
-                        );
-                      },
-                    );
-                  },
-                ),
-          error: (message) => Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Error: $message'),
-                ElevatedButton(
-                  onPressed: () => context.read<MyPostsCubit>().loadMyPosts('1'),
-                  child: const Text('Retry'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 
@@ -320,20 +142,5 @@ class _SocialMainPageState extends State<SocialMainPage>
       },
       child: const Icon(Icons.add),
     );
-  }
-
-  String _formatTimeAgo(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
-
-    if (difference.inDays > 0) {
-      return '${difference.inDays}d ago';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}h ago';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}m ago';
-    } else {
-      return 'Just now';
-    }
   }
 }

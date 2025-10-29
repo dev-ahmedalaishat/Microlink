@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:microlink/core/theme/spacing.dart';
 import '../constants/app_constants.dart';
 
 /// Extension methods for Widget to reduce boilerplate code
@@ -18,6 +19,11 @@ extension WidgetExtensions on Widget {
         ),
         child: this,
       );
+
+  Widget screenPadding() => Padding(
+    padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+    child: this,
+  );
 
   /// Adds padding only to specific sides
   Widget paddingOnly({
@@ -182,93 +188,39 @@ extension WidgetExtensions on Widget {
   // MARK: - Predefined Padding Extensions using AppConstants
 
   /// Adds extra small padding (4.0) to all sides
-  Widget paddingXS() => paddingAll(AppConstants.paddingXS);
-
-  /// Adds extra small padding (4.0) to all sides
-  Widget paddingXXS() => paddingAll(AppConstants.paddingXXS);
+  Widget paddingXS() => paddingAll(AppSpacing.xs);
 
   /// Adds small padding (8.0) to all sides
-  Widget paddingS() => paddingAll(AppConstants.paddingS);
+  Widget paddingS() => paddingAll(AppSpacing.sm);
 
   /// Adds medium padding (12.0) to all sides
-  Widget paddingM() => paddingAll(AppConstants.paddingM);
+  Widget paddingM() => paddingAll(AppSpacing.md);
 
   /// Adds large padding (16.0) to all sides
-  Widget paddingL() => paddingAll(AppConstants.paddingL);
+  Widget paddingL() => paddingAll(AppSpacing.lg);
 
   /// Adds extra large padding (20.0) to all sides
-  Widget paddingXL() => paddingAll(AppConstants.paddingXL);
+  Widget paddingXL() => paddingAll(AppSpacing.xl);
 
   /// Adds extra extra large padding (24.0) to all sides
-  Widget paddingXXL() => paddingAll(AppConstants.paddingXXL);
+  Widget paddingXXL() => paddingAll(AppSpacing.xxl);
 
   /// Adds extra extra extra large padding (32.0) to all sides
-  Widget paddingXXXL() => paddingAll(AppConstants.paddingXXXL);
-
-  // MARK: - Predefined Spacing Extensions
-
-  /// Adds extra small spacing (4.0) as SizedBox
-  Widget spaceXS() => Column(
-    children: [
-      this,
-      SizedBox(height: AppConstants.spaceXS),
-    ],
-  );
-
-  /// Adds small spacing (8.0) as SizedBox
-  Widget spaceS() => Column(
-    children: [
-      this,
-      SizedBox(height: AppConstants.spaceS),
-    ],
-  );
-
-  /// Adds medium spacing (12.0) as SizedBox
-  Widget spaceM() => Column(
-    children: [
-      this,
-      SizedBox(height: AppConstants.spaceM),
-    ],
-  );
-
-  /// Adds large spacing (16.0) as SizedBox
-  Widget spaceL() => Column(
-    children: [
-      this,
-      SizedBox(height: AppConstants.spaceL),
-    ],
-  );
-
-  /// Adds extra large spacing (20.0) as SizedBox
-  Widget spaceXL() => Column(
-    children: [
-      this,
-      SizedBox(height: AppConstants.spaceXL),
-    ],
-  );
+  Widget paddingXXXL() => paddingAll(AppSpacing.xxxl);
 
   // MARK: - Predefined Border Radius Extensions
 
-  /// Adds extra small border radius (2.0)
-  Widget radiusXS() => borderRadius(AppConstants.radiusXS);
+  /// Adds small border radius (8.0)
+  Widget radiusS() => borderRadius(AppSpacing.radiusSmall);
 
-  /// Adds small border radius (4.0)
-  Widget radiusS() => borderRadius(AppConstants.radiusS);
+  /// Adds medium border radius (12.0)
+  Widget radiusM() => borderRadius(AppSpacing.radiusMedium);
 
-  /// Adds medium border radius (8.0)
-  Widget radiusM() => borderRadius(AppConstants.radiusM);
+  /// Adds large border radius (16.0)
+  Widget radiusL() => borderRadius(AppSpacing.radiusLarge);
 
-  /// Adds large border radius (12.0)
-  Widget radiusL() => borderRadius(AppConstants.radiusL);
-
-  /// Adds extra large border radius (16.0)
-  Widget radiusXL() => borderRadius(AppConstants.radiusXL);
-
-  /// Adds extra extra large border radius (20.0)
-  Widget radiusXXL() => borderRadius(AppConstants.radiusXXL);
-
-  /// Adds extra extra extra large border radius (24.0)
-  Widget radiusXXXL() => borderRadius(AppConstants.radiusXXXL);
+  /// Adds extra large border radius (24.0)
+  Widget radiusXL() => borderRadius(AppSpacing.radiusXLarge);
 
   // MARK: - Predefined Card Extensions
 

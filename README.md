@@ -31,9 +31,15 @@ lib/
 │   │   ├── color_palette.dart      # Color definitions
 │   │   ├── text_styles.dart        # Typography system
 │   │   └── spacing.dart            # Consistent spacing values
+│   ├── presentation/               # Reusable UI components
+│   │   ├── spacing_widgets.dart    # SpacerH & SpacerV spacing widgets
+│   │   └── story_avatar.dart       # Reusable story avatar component
+│   ├── extensions/                 # Widget extension methods
+│   │   └── widget_extensions.dart  # Comprehensive widget extensions
 │   ├── network/                    # Network utilities
 │   │   └── network_info.dart       # Network connectivity checker
 │   ├── constants/                  # App-wide constants
+│   │   └── app_constants.dart      # Design system constants
 │   └── responsive/                 # Responsive design utilities
 │       ├── responsive_builder.dart # Screen size detection
 │       ├── screen_breakpoints.dart # Device breakpoints
@@ -329,6 +335,177 @@ widget.onTap(callback)  // Simple tap gesture
 - **Styling:** `borderRadius()`, `opacity()`, `background()`
 - **Layout:** `center()`, `expanded()`, `flexible()`
 - **Gestures:** `onTap()`, `onLongPress()`
+
+## 📏 Spacing Widgets System
+
+### SpacerH & SpacerV Classes
+The app provides dedicated spacing widget classes (`lib/core/presentation/spacing_widgets.dart`) for consistent horizontal and vertical spacing:
+
+#### Vertical Spacing (SpacerV)
+```dart
+// Instead of: const SizedBox(height: 12)
+Column(
+  children: [
+    Text('First'),
+    SpacerV.m,  // 12px vertical spacing
+    Text('Second'),
+    SpacerV.l,  // 16px vertical spacing
+    Text('Third'),
+  ],
+)
+```
+
+#### Horizontal Spacing (SpacerH)
+```dart
+// Instead of: const SizedBox(width: 8)
+Row(
+  children: [
+    Icon(Icons.like),
+    SpacerH.s,  // 8px horizontal spacing
+    Text('Like'),
+  ],
+)
+```
+
+### Available Spacing Sizes
+- **`xs`** - 4px (Extra Small)
+- **`s`** - 8px (Small)
+- **`m`** - 12px (Medium)
+- **`l`** - 16px (Large)
+- **`xl`** - 20px (Extra Large)
+- **`xxl`** - 24px (Extra Extra Large)
+- **`xxxl`** - 32px (Extra Extra Extra Large)
+- **`full`** (SpacerH only) - Takes full available width
+
+### When to Use Spacing Widgets vs Extensions
+- **Use SpacerV/SpacerH** - For spacing *between* widgets in Row/Column
+- **Use `.spaceM()` extension** - For spacing *after* a single widget (adds SizedBox below)
+- **Use `.paddingL()` extension** - For spacing *around* a widget (adds padding)
+
+### Real-World Examples
+```dart
+// Clean spacing in a Column
+Column(
+  children: [
+    HeaderWidget(),
+    SpacerV.l,
+    ContentWidget(),
+    SpacerV.m,
+    FooterWidget(),
+  ],
+)
+
+// Clean spacing in a Row
+Row(
+  children: [
+    Icon(Icons.star),
+    SpacerH.s,
+    Text('4.5'),
+    SpacerH.m,
+    Text('(120 reviews)'),
+  ],
+)
+
+// Mixed approach
+Column(
+  children: [
+    Title().paddingL(),      // Padding around title
+    SpacerV.m,               // Space before content
+    Content(),
+    Actions().spaceL(),      // Space after actions
+  ],
+)
+```
+
+### Benefits of Spacing Widgets
+- **Const constructors:** Better performance with compile-time constants
+- **Cleaner code:** More readable than inline SizedBox
+- **Consistency:** Same spacing values across the entire app
+- **Type safety:** Separate classes for horizontal vs vertical spacing
+- **IntelliSense friendly:** Easy to discover available sizes
+
+## 🎨 Reusable UI Components
+
+### StoryAvatar Component
+A reusable story/status avatar widget (`lib/core/presentation/story_avatar.dart`) that can be used throughout the app:
+
+#### Basic Usage
+```dart
+// Default avatar
+StoryAvatar(
+  backgroundColor: AppColors.primary,
+)
+
+// Avatar with tap handler
+StoryAvatar(
+  backgroundColor: Colors.orange,
+  onTap: () => print('Tapped!'),
+)
+
+// Custom size and styling
+StoryAvatar(
+  size: 80,
+  backgroundColor: Colors.blue,
+  borderColor: Colors.white,
+  borderWidth: 3,
+  borderRadius: 16,
+)
+```
+
+#### Factory Constructors
+
+**Add Story Avatar:**
+```dart
+StoryAvatar.add(
+  onTap: () => navigateToAddStory(),
+)
+```
+
+**Avatar with Initials:**
+```dart
+StoryAvatar.initials(
+  name: 'John Doe',
+  backgroundColor: AppColors.primary,
+  onTap: () => viewUserStory(),
+)
+```
+
+#### Parameters
+- **`size`** - Avatar dimension (default: 60)
+- **`backgroundColor`** - Background color
+- **`borderColor`** - Border color (default: AppColors.storyBorder)
+- **`borderWidth`** - Border thickness (default: 2)
+- **`borderRadius`** - Corner radius (default: 12)
+- **`child`** - Custom content widget
+- **`onTap`** - Optional tap callback
+
+#### Benefits
+- **Reusable:** Can be used in stories, user profiles, chat lists, etc.
+- **Consistent:** Maintains uniform styling across the app
+- **Flexible:** Factory constructors for common use cases
+- **Type-safe:** Clear parameters with defaults
+- **Tap-enabled:** Built-in gesture handling
+
+#### Real-World Example
+```dart
+// In stories section
+Row(
+  children: [
+    StoryAvatar.add(onTap: () => createStory()),
+    SpacerH.m,
+    StoryAvatar(backgroundColor: Colors.teal),
+    SpacerH.m,
+    StoryAvatar.initials(name: 'Alice'),
+  ],
+)
+
+// In user profile header
+StoryAvatar(
+  size: 80,
+  backgroundColor: AppColors.primary,
+  child: Icon(Icons.person, size: 40),
+)
+```
 
 ### Real Implementation Example
 ```dart

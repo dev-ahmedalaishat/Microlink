@@ -5,16 +5,6 @@ class AppConstants {
   // Private constructor to prevent instantiation
   AppConstants._();
 
-  /// Padding constants
-  static const double paddingXXS = 2.0;
-  static const double paddingXS = 4.0;
-  static const double paddingS = 8.0;
-  static const double paddingM = 12.0;
-  static const double paddingL = 16.0;
-  static const double paddingXL = 20.0;
-  static const double paddingXXL = 24.0;
-  static const double paddingXXXL = 32.0;
-
   /// Icon sizes
   static const double iconXS = 12.0;
   static const double iconS = 16.0;
@@ -24,16 +14,6 @@ class AppConstants {
   static const double iconXXL = 48.0;
   static const double iconXXXL = 64.0;
 
-  /// Border radius constants
-  static const double radiusXS = 2.0;
-  static const double radiusS = 4.0;
-  static const double radiusM = 8.0;
-  static const double radiusL = 12.0;
-  static const double radiusXL = 16.0;
-  static const double radiusXXL = 20.0;
-  static const double radiusXXXL = 24.0;
-  static const double radiusCircular = 50.0;
-
   /// Elevation constants
   static const double elevationNone = 0.0;
   static const double elevationXS = 1.0;
@@ -42,15 +22,6 @@ class AppConstants {
   static const double elevationL = 6.0;
   static const double elevationXL = 8.0;
   static const double elevationXXL = 12.0;
-
-  /// Spacing constants
-  static const double spaceXS = 4.0;
-  static const double spaceS = 8.0;
-  static const double spaceM = 12.0;
-  static const double spaceL = 16.0;
-  static const double spaceXL = 20.0;
-  static const double spaceXXL = 24.0;
-  static const double spaceXXXL = 32.0;
 
   /// Font size constants
   static const double fontXS = 10.0;

@@ -13,17 +13,16 @@ class AppTheme {
       primary: AppColors.primary,
       secondary: AppColors.accent,
       surface: AppColors.surface,
-      background: AppColors.background,
+      surfaceContainer: AppColors.accent,
       error: AppColors.error,
       onPrimary: AppColors.textOnPrimary,
       onSecondary: AppColors.textOnPrimary,
       onSurface: AppColors.textPrimary,
-      onBackground: AppColors.textPrimary,
     ),
 
     // App Bar Theme
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.surface,
       foregroundColor: AppColors.textPrimary,
       elevation: 0,
       centerTitle: true,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/presentation/spacing_widgets.dart';
 import '../../../../core/theme/color_palette.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/extensions/widget_extensions.dart';
@@ -8,33 +9,29 @@ class MyPostCard extends StatelessWidget {
   final Post post;
   final VoidCallback? onTap;
 
-  const MyPostCard({
-    super.key,
-    required this.post,
-    this.onTap,
-  });
+  const MyPostCard({super.key, required this.post, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildStatusHeader(),
-        _buildContent().spaceS(),
-        if (post.status == PostStatus.approved)
-          _buildInteractionStats().spaceS(),
-      ],
-    ).paddingL().onTap(onTap ?? () {}).cardM(radius: 12.0).marginOnly(bottom: 12.0);
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildStatusHeader(),
+            _buildContent(),
+            if (post.status == PostStatus.approved) _buildInteractionStats(),
+          ],
+        )
+        .paddingL()
+        .onTap(onTap ?? () {})
+        .cardM(radius: 12.0)
+        .marginOnly(bottom: 12.0);
   }
 
   Widget _buildStatusHeader() {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 4,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: _getStatusColor().withOpacity(0.1),
             borderRadius: BorderRadius.circular(4),
@@ -49,38 +46,28 @@ class MyPostCard extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        Text(
-          _formatTimeAgo(post.createdAt),
-          style: AppTextStyles.timestamp,
-        ),
+        Text(_formatTimeAgo(post.createdAt), style: AppTextStyles.timestamp),
       ],
     );
   }
 
   Widget _buildContent() {
-    return Text(
-      post.content,
-      style: AppTextStyles.postContent,
-    );
+    return Text(post.content, style: AppTextStyles.postContent);
   }
 
   Widget _buildInteractionStats() {
     return Row(
       children: [
-        Icon(
-          Icons.favorite,
-          size: 16,
-          color: AppColors.iconInactive,
-        ),
-        const SizedBox(width: 4),
+        const Icon(Icons.favorite, size: 16, color: AppColors.iconInactive),
+        SpacerH.xs,
         Text('${post.likesCount}'),
-        const SizedBox(width: 12),
-        Icon(
+        SpacerH.m,
+        const Icon(
           Icons.chat_bubble_outline,
           size: 16,
           color: AppColors.iconInactive,
         ),
-        const SizedBox(width: 4),
+        SpacerH.xs,
         Text('${post.commentsCount}'),
       ],
     );
@@ -93,7 +80,6 @@ class MyPostCard extends StatelessWidget {
       case PostStatus.rejected:
         return Colors.red;
       case PostStatus.pending:
-      default:
         return Colors.orange;
     }
   }

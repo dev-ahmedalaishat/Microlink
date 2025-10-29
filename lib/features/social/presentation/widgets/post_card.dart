@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/color_palette.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:microlink/core/constants/app_constants.dart';
+import 'package:microlink/core/extensions/date_extensions.dart';
+import 'package:microlink/core/presentation/spacing_widgets.dart';
+import 'package:microlink/core/presentation/story_avatar_v2.dart';
+import 'package:microlink/core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/extensions/widget_extensions.dart';
 import '../../domain/entities/post.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final Post post;
   final VoidCallback? onLikeTap;
   final VoidCallback? onCommentTap;
   final VoidCallback? onShareTap;
-  final VoidCallback? onMoreTap;
 
   const PostCard({
     super.key,
@@ -17,8 +21,44 @@ class PostCard extends StatelessWidget {
     this.onLikeTap,
     this.onCommentTap,
     this.onShareTap,
-    this.onMoreTap,
   });
+
+  @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _likeAnimationController;
+  late Animation<double> _likeScaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _likeAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _likeScaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(
+        parent: _likeAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _likeAnimationController.dispose();
+    super.dispose();
+  }
+
+  void _handleLikeTap() {
+    _likeAnimationController.forward().then((_) {
+      _likeAnimationController.reverse();
+    });
+    widget.onLikeTap?.call();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,130 +66,140 @@ class PostCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Post header
-        _buildPostHeader(),
-        
+        SpacerV.l,
+        _buildPostHeader().screenPadding(),
+        SpacerV.l,
         // Post content
-        _buildPostContent().spaceM(),
-        
+        Text(widget.post.content).screenPadding(),
+        SpacerV.l,
+
         // Media if available
-        if (post.mediaUrls.isNotEmpty) 
-          _buildMediaSection().spaceM(),
-        
+        if (widget.post.mediaUrls.isNotEmpty) ...[
+          _buildMediaSection(),
+          SpacerV.l,
+        ],
+
         // Post interactions
-        _buildInteractionRow(),
+        _buildInteractionRow(context).screenPadding(),
+        SpacerV.l,
       ],
-    ).paddingL().cardM(radius: 12.0).marginOnly(bottom: 12.0);
+    );
   }
 
   Widget _buildPostHeader() {
     return Row(
       children: [
-        CircleAvatar(
-          radius: 20,
-          backgroundColor: AppColors.primary,
-          child: Text(
-            post.author.name[0].toUpperCase(),
-            style: const TextStyle(
-              color: AppColors.textOnPrimary,
-              fontWeight: FontWeight.bold,
+        StoryAvatarV2(),
+        SpacerH.s,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.post.author.name, style: AppTextStyles.userName),
+            Text(
+              widget.post.createdAt.timeAgo(),
+              style: AppTextStyles.timestamp,
             ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                post.author.name,
-                style: AppTextStyles.userName,
-              ),
-              Text(
-                _formatTimeAgo(post.createdAt),
-                style: AppTextStyles.timestamp,
-              ),
-            ],
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.more_vert),
-          onPressed: onMoreTap,
-        ),
+          ],
+        ).expanded(),
       ],
-    );
-  }
-
-  Widget _buildPostContent() {
-    return Text(
-      post.content,
-      style: AppTextStyles.postContent,
     );
   }
 
   Widget _buildMediaSection() {
-    return Container(
-      height: 200,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: const Icon(
-        Icons.image,
-        size: 50,
-        color: Colors.grey,
+    final imageHeight = MediaQuery.of(context).size.width * 1.05;
+
+    if (widget.post.mediaUrls.length == 1) {
+      return Container(
+        width: double.infinity,
+        height: imageHeight,
+        decoration: BoxDecoration(
+          color: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Icon(Icons.image, size: 50, color: Colors.grey),
+      ).screenPadding();
+    }
+    final imageWidth = imageHeight * 0.7;
+
+    return SizedBox(
+      height: imageHeight,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: widget.post.mediaUrls.length,
+        separatorBuilder: (context, index) => SpacerH.xs,
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+        itemBuilder: (context, index) {
+          return Container(
+            width: imageWidth,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(AppSpacing.postImageRadius),
+            ),
+            child: const Icon(Icons.image, size: 50, color: Colors.grey),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildInteractionRow() {
+  Widget _buildInteractionRow(BuildContext context) {
     return Row(
       children: [
-        InkWell(
-          onTap: onLikeTap,
-          child: Row(
-            children: [
-              Icon(
-                post.isLiked ? Icons.favorite : Icons.favorite_border,
-                color: post.isLiked ? AppColors.liked : AppColors.iconInactive,
+        Row(
+          children: [
+            ScaleTransition(
+              scale: _likeScaleAnimation,
+              child: _buildIconButton(
+                widget.post.isLiked
+                    ? 'assets/icons/ic_like.svg'
+                    : 'assets/icons/ic_unlike.svg',
+                _handleLikeTap,
               ),
-              const SizedBox(width: 4),
-              Text('${post.likesCount}'),
-            ],
-          ),
+            ),
+            SpacerH.xs,
+            _buildCountBadge(context, widget.post.likesCount),
+          ],
         ),
-        const SizedBox(width: 16),
-        InkWell(
-          onTap: onCommentTap,
-          child: Row(
-            children: [
-              const Icon(Icons.chat_bubble_outline),
-              const SizedBox(width: 4),
-              Text('${post.commentsCount}'),
-            ],
-          ),
+        SpacerH.m,
+        Row(
+          children: [
+            _buildIconButton(
+              'assets/icons/ic_comment.svg',
+              widget.onCommentTap,
+            ),
+            SpacerH.xs,
+            _buildCountBadge(context, widget.post.commentsCount),
+          ],
         ),
-        const Spacer(),
-        InkWell(
-          onTap: onShareTap,
-          child: const Icon(Icons.send),
-        ),
+        SpacerH.m,
+        _buildIconButton('assets/icons/ic_share.svg', widget.onShareTap),
       ],
     );
   }
 
-  String _formatTimeAgo(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
+  Widget _buildIconButton(String iconPath, VoidCallback? onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+      child: SvgPicture.asset(
+        iconPath,
+        width: AppConstants.iconM,
+        height: AppConstants.iconM,
+        matchTextDirection: false,
+      ),
+    );
+  }
 
-    if (difference.inDays > 0) {
-      return '${difference.inDays}d ago';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}h ago';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}m ago';
-    } else {
-      return 'Just now';
-    }
+  Widget _buildCountBadge(BuildContext context, int count) {
+    return Text(
+          '$count',
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+        )
+        .sized(height: AppConstants.iconM)
+        .paddingSymmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs)
+        .background(Theme.of(context).colorScheme.onSurface.withAlpha(13))
+        .radiusXL();
   }
 }
