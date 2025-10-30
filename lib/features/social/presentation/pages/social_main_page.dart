@@ -4,11 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import '../../../../core/extensions/widget_extensions.dart';
 import '../../../../core/theme/color_palette.dart';
-import '../../../../core/theme/text_styles.dart';
 import '../cubit/posts/posts_cubit.dart';
 import '../widgets/latest_feed_view.dart';
 import '../widgets/my_posts_feed_view.dart';
-import '../widgets/stories_section.dart';
+import '../widgets/create_post_widget.dart';
 
 class SocialMainPage extends StatefulWidget {
   const SocialMainPage({super.key});
@@ -45,71 +44,77 @@ class _SocialMainPageState extends State<SocialMainPage>
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/'),
         ),
+        surfaceTintColor: Colors.transparent,
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.surface,
         actions: [
           IconButton(icon: const Icon(Icons.notifications), onPressed: () {}),
         ],
       ),
-      body: Column(
-        children: [
-          // // Stories Section
-          // StoriesSection(
-          //   stories: const [
-          //     StoryItem(label: 'TSC'),
-          //     StoryItem(label: 'Micropolis'),
-          //     StoryItem(label: 'Garden'),
-          //   ],
-          //   onAddStory: () {
-          //     ScaffoldMessenger.of(context).showSnackBar(
-          //       const SnackBar(content: Text('Add story coming soon!')),
-          //     );
-          //   },
-          // ),
-
-          // Tab Bar
-          _buildTabBar(),
-
-          Divider(height: 1),
-
-          // Tab Content
-          TabBarView(
-            controller: _tabController,
-            children: const [LatestFeedView(), MyPostsFeedView()],
-          ).expanded(),
-        ],
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverToBoxAdapter(child: Divider(height: 10, thickness: 4)),
+            // Create Post Widget as a sliver that scrolls away
+            SliverToBoxAdapter(
+              child:
+                  CreatePostWidget(
+                        onPostCreated: () {
+                          context.read<PostsCubit>().refreshPosts();
+                        },
+                      )
+                      .paddingSymmetric(
+                        horizontal: AppSpacing.screenPadding,
+                        // vertical: AppSpacing.md,
+                      )
+                      .paddingOnly(top: AppSpacing.md),
+            ),
+            SliverToBoxAdapter(child: Divider(height: 1)),
+            // Pinned Tab Bar
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _SliverAppBarDelegate(
+                TabBar(
+                  controller: _tabController,
+                  labelColor: Theme.of(context).colorScheme.onSurface,
+                  unselectedLabelColor: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withAlpha(154),
+                  labelStyle: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
+                  unselectedLabelStyle: Theme.of(context).textTheme.bodyMedium,
+                  indicator: const UnderlineTabIndicator(
+                    borderSide: BorderSide(color: AppColors.primary, width: 3),
+                  ),
+                  dividerColor: Colors.transparent,
+                  dividerHeight: 1,
+                  // tabAlignment: TabAlignment.center,
+                  tabs: [
+                    const Tab(
+                      text: 'Latest',
+                    ).paddingSymmetric(horizontal: AppSpacing.xxl),
+                    const Tab(
+                      text: 'My Posts',
+                    ).paddingSymmetric(horizontal: AppSpacing.xxl),
+                  ],
+                ),
+              ),
+            ),
+            // Divider
+            SliverToBoxAdapter(child: Divider(height: 1)),
+          ];
+        },
+        body: TabBarView(
+          controller: _tabController,
+          children: const [LatestFeedView(), MyPostsFeedView()],
+        ),
       ),
 
       // Bottom Navigation with FAB
       bottomNavigationBar: _buildBottomNavigation(),
       floatingActionButton: _buildFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-    );
-  }
-
-  Widget _buildTabBar() {
-    return TabBar(
-      controller: _tabController,
-      labelColor: Theme.of(context).colorScheme.onSurface,
-      unselectedLabelColor: Theme.of(
-        context,
-      ).colorScheme.onSurface.withAlpha(154),
-      labelStyle: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
-      unselectedLabelStyle: Theme.of(context).textTheme.bodyMedium,
-      indicator: const UnderlineTabIndicator(
-        borderSide: BorderSide(color: AppColors.primary, width: 3),
-      ),
-      dividerColor: Colors.transparent,
-      dividerHeight: 1,
-      tabAlignment: TabAlignment.center,
-      tabs: [
-        const Tab(text: 'Latest').paddingSymmetric(horizontal: AppSpacing.xxxl),
-        const Tab(
-          text: 'My Posts',
-        ).paddingSymmetric(horizontal: AppSpacing.xxl),
-      ],
     );
   }
 
@@ -156,5 +161,34 @@ class _SocialMainPageState extends State<SocialMainPage>
       },
       child: const Icon(Icons.add),
     );
+  }
+}
+
+// Delegate for pinned tab bar in NestedScrollView
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate(this._tabBar);
+
+  final TabBar _tabBar;
+
+  @override
+  double get minExtent => _tabBar.preferredSize.height;
+  @override
+  double get maxExtent => _tabBar.preferredSize.height;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: _tabBar,
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return false;
   }
 }

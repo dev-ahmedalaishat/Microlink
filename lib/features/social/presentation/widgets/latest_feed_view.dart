@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:microlink/core/extensions/widget_extensions.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../../core/theme/spacing.dart';
 import '../../domain/entities/post.dart';
 import '../cubit/posts/posts_cubit.dart';
 import '../cubit/posts/posts_state.dart';
@@ -14,22 +13,16 @@ class LatestFeedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Divider(height: 1),
-        BlocBuilder<PostsCubit, PostsState>(
-          builder: (context, state) {
-            return state.when(
-              initial: () =>
-                  const Center(child: Text('Welcome to Social Feed')),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              success: (posts) => _LatestFeedSuccess(posts: posts),
-              error: (message) => _LatestFeedError(message: message),
-            );
-          },
-        ).expanded(),
-      ],
-    ).expanded();
+    return BlocBuilder<PostsCubit, PostsState>(
+      builder: (context, state) {
+        return state.when(
+          initial: () => const Center(child: Text('Welcome to Social Feed')),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          success: (posts) => _LatestFeedSuccess(posts: posts),
+          error: (message) => _LatestFeedError(message: message),
+        );
+      },
+    );
   }
 }
 

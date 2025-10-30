@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:microlink/core/extensions/widget_extensions.dart';
+import 'package:microlink/core/presentation/profile_avatar.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/presentation/story_avatar_v2.dart';
 import 'package:microlink/core/theme/spacing.dart';
@@ -130,7 +131,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        StoryAvatarV2(),
+        ProfileAvatar(imageUrl: ''),
         SpacerH.s,
         Expanded(
           child: Column(
@@ -168,7 +169,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        StoryAvatarV2().paddingOnly(bottom: AppSpacing.md),
+        ProfileAvatar(imageUrl: '').paddingOnly(bottom: AppSpacing.md),
         SpacerH.s,
         Container(
           margin: EdgeInsets.symmetric(vertical: AppSpacing.md),
