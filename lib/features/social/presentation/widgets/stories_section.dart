@@ -2,42 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:microlink/core/presentation/story_avatar_v2.dart';
 
 import '../../../../core/presentation/spacing_widgets.dart';
-import '../../../../core/presentation/story_avatar.dart';
 import '../../../../core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
+import 'add_story_widget.dart';
 
 class StoriesSection extends StatelessWidget {
   final List<StoryItem> stories;
   final VoidCallback? onAddStory;
 
-  const StoriesSection({
-    super.key,
-    required this.stories,
-    this.onAddStory,
-  });
+  const StoriesSection({super.key, required this.stories, this.onAddStory});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-      child: ListView(
+      child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
-        children: [
-          // // Your Story (Add story button)
-          // _StoryItemWidget(
-          //   label: 'Your story',
-          //   hasAddIcon: true,
-          //   onTap: onAddStory,
-          // ),
-          // // Other stories
-          ...stories.map((story) => _StoryItemWidget(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.screenPadding,
+        ),
+        child: Row(
+          children: [
+            // Your Story (Add story button)
+            AddStoryWidget(onTap: onAddStory),
+            // Other stories
+            ...stories.map(
+              (story) => _StoryItemWidget(
                 label: story.label,
                 imageUrl: story.imageUrl,
                 onTap: story.onTap,
-              )),
-        ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -46,15 +43,9 @@ class StoriesSection extends StatelessWidget {
 class _StoryItemWidget extends StatelessWidget {
   final String label;
   final String? imageUrl;
-  final bool hasAddIcon;
   final VoidCallback? onTap;
 
-  const _StoryItemWidget({
-    required this.label,
-    this.imageUrl,
-    this.hasAddIcon = false,
-    this.onTap,
-  });
+  const _StoryItemWidget({required this.label, this.imageUrl, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +57,7 @@ class _StoryItemWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            hasAddIcon
-                ? StoryAvatarV2(onTap: onTap)
-                : StoryAvatarV2(
-                    imageUrl: imageUrl,
-                    onTap: onTap,
-                    size: 80,
-                  ),
+            StoryAvatarV2(imageUrl: imageUrl, onTap: onTap, size: 80),
             SpacerV.xs,
             Text(
               label,
@@ -94,9 +79,5 @@ class StoryItem {
   final String? imageUrl;
   final VoidCallback? onTap;
 
-  const StoryItem({
-    required this.label,
-    this.imageUrl,
-    this.onTap,
-  });
+  const StoryItem({required this.label, this.imageUrl, this.onTap});
 }

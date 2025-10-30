@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:microlink/core/theme/spacing.dart';
+import 'package:microlink/features/social/presentation/widgets/stories_section.dart';
 import '../../../../core/extensions/widget_extensions.dart';
 import '../../../../core/theme/color_palette.dart';
 import '../cubit/posts/posts_cubit.dart';
@@ -54,6 +55,18 @@ class _SocialMainPageState extends State<SocialMainPage>
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
+            SliverToBoxAdapter(
+              child: StoriesSection(
+                stories: [
+                  // Dummy stories for illustration
+                  StoryItem(label: 'Your Story', imageUrl: ''),
+                  StoryItem(label: "Alice", imageUrl: ''),
+                  StoryItem(label: "Alice", imageUrl: ''),
+                  StoryItem(label: "Alice", imageUrl: ''),
+                  StoryItem(label: "Alice", imageUrl: ''),
+                ],
+              ).paddingOnly(top: AppSpacing.md),
+            ),
             SliverToBoxAdapter(child: Divider(height: 10, thickness: 4)),
             // Create Post Widget as a sliver that scrolls away
             SliverToBoxAdapter(
