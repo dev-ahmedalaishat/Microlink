@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:microlink/core/presentation/story_avatar_v2.dart';
+import 'package:microlink/core/presentation/story_avatar.dart';
 
 import '../../../../core/presentation/spacing_widgets.dart';
 import '../../../../core/theme/spacing.dart';
@@ -57,7 +57,7 @@ class _StoryItemWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            StoryAvatarV2(imageUrl: imageUrl, onTap: onTap, size: 80),
+            StoryAvatar(imageUrl: imageUrl, onTap: onTap, size: 80),
             SpacerV.xs,
             Text(
               label,

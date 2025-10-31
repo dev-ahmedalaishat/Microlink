@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:microlink/core/extensions/widget_extensions.dart';
 import 'package:microlink/core/presentation/profile_avatar.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
-import 'package:microlink/core/presentation/story_avatar_v2.dart';
+import 'package:microlink/core/presentation/story_avatar.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/core/theme/text_styles.dart';
 import 'package:microlink/core/extensions/date_extensions.dart';
