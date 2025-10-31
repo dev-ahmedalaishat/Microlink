@@ -29,13 +29,69 @@ class PostsCubit extends Cubit<PostsState> {
     await loadLatestPosts();
   }
 
-  Future<void> toggleLike(String postId, String userId) async {
+  Future<void> toggleLike(String postId) async {
     try {
-      await _repository.toggleLike(postId: postId, userId: userId);
-      // Refresh posts to update like count
-      await loadLatestPosts(forceRefresh: false);
+      // Step 1: Optimistically update the UI
+      state.maybeWhen(
+        success: (posts) {
+          final updatedPosts = posts.map((post) {
+            if (post.id == postId) {
+              final newIsLiked = !post.isLiked;
+              final newLikesCount = newIsLiked
+                  ? post.likesCount + 1
+                  : post.likesCount - 1;
+              return post.copyWith(
+                isLiked: newIsLiked,
+                likesCount: newLikesCount,
+              );
+            }
+            return post;
+          }).toList();
+          emit(PostsState.success(updatedPosts));
+        },
+        orElse: () {},
+      );
+
+      // Step 2: Call the repository to toggle like
+      final result = await _repository.toggleLike(postId: postId);
+
+      // Step 3: Update state with actual result from server
+      state.maybeWhen(
+        success: (posts) {
+          final updatedPosts = posts.map((post) {
+            if (post.id == postId) {
+              return post.copyWith(
+                isLiked: result.isLiked,
+                likesCount: result.likesCount,
+              );
+            }
+            return post;
+          }).toList();
+          emit(PostsState.success(updatedPosts));
+        },
+        orElse: () {},
+      );
     } catch (e) {
-      emit(PostsState.error('Failed to toggle like: ${e.toString()}'));
+      // If error occurs, revert the optimistic update
+      state.maybeWhen(
+        success: (posts) {
+          final revertedPosts = posts.map((post) {
+            if (post.id == postId) {
+              final revertIsLiked = !post.isLiked;
+              final revertLikesCount = revertIsLiked
+                  ? post.likesCount + 1
+                  : post.likesCount - 1;
+              return post.copyWith(
+                isLiked: revertIsLiked,
+                likesCount: revertLikesCount,
+              );
+            }
+            return post;
+          }).toList();
+          emit(PostsState.success(revertedPosts));
+        },
+        orElse: () {},
+      );
     }
   }
 }
@@ -45,26 +101,18 @@ class MyPostsCubit extends Cubit<MyPostsState> {
 
   MyPostsCubit(this._repository) : super(const MyPostsState.initial());
 
-  Future<void> loadMyPosts(
-    String userId, {
-    int page = 1,
-    int limit = 10,
-  }) async {
+  Future<void> loadMyPosts({int page = 1, int limit = 10}) async {
     try {
       emit(const MyPostsState.loading());
-      final posts = await _repository.getMyPosts(
-        userId: userId,
-        page: page,
-        limit: limit,
-      );
+      final posts = await _repository.getMyPosts(page: page, limit: limit);
       emit(MyPostsState.success(posts));
     } catch (e) {
       emit(MyPostsState.error(e.toString()));
     }
   }
 
-  Future<void> refreshMyPosts(String userId) async {
-    await loadMyPosts(userId);
+  Future<void> refreshMyPosts() async {
+    await loadMyPosts();
   }
 }
 

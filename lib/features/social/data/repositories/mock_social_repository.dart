@@ -1,4 +1,5 @@
 import '../../domain/entities/post.dart';
+import '../../domain/entities/toggle_like_result.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/social_repository.dart';
 
@@ -158,17 +159,13 @@ class MockSocialRepository implements SocialRepository {
   }
 
   @override
-  Future<List<Post>> getMyPosts({
-    required String userId,
-    int page = 1,
-    int limit = 10,
-  }) async {
+  Future<List<Post>> getMyPosts({int page = 1, int limit = 10}) async {
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 600));
 
     // Return posts by the specified user
     final userPosts = _mockPosts
-        .where((post) => post.author.id == userId)
+        .where((post) => post.author.id == '1')
         .toList();
 
     // Sort by creation date (newest first)
@@ -257,10 +254,7 @@ class MockSocialRepository implements SocialRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> toggleLike({
-    required String postId,
-    required String userId,
-  }) async {
+  Future<ToggleLikeResult> toggleLike({required String postId}) async {
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 300));
 
@@ -275,9 +269,11 @@ class MockSocialRepository implements SocialRepository {
         isLiked: newLiked,
         likesCount: newCount,
       );
+
+      return ToggleLikeResult(isLiked: newLiked, likesCount: newCount);
     }
 
-    return {'success': true};
+    throw Exception('Post not found');
   }
 
   @override

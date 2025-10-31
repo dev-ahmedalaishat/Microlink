@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:microlink/core/extensions/widget_extensions.dart';
-import 'package:microlink/core/presentation/snackbar/custom_snackbar.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../domain/entities/post.dart';
 import '../cubit/posts/posts_cubit.dart';
 import '../cubit/posts/posts_state.dart';
-import 'post_card_approved.dart';
+import 'post_card.dart';
 
-class LatestFeedTab extends StatelessWidget {
-  const LatestFeedTab({super.key});
+class LatestFeedView extends StatelessWidget {
+  const LatestFeedView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,30 +37,17 @@ class _LatestFeedSuccess extends StatelessWidget {
       onRefresh: () async {
         context.read<PostsCubit>().refreshPosts();
       },
+
       child: ListView.separated(
-        itemCount: posts.length + 1,
+        itemCount: posts.length,
         separatorBuilder: (context, index) =>
             const Divider(height: 1).screenPadding(),
         itemBuilder: (context, index) {
-          if (index == posts.length) {
-            return const Padding(
-              padding: EdgeInsets.all(32.0),
-              child: Center(
-                child: Text(
-                  "That's all",
-                  style: TextStyle(color: Colors.grey, fontSize: 16),
-                ),
-              ),
-            );
-          }
-
           final post = posts[index];
-          return PostCardApproved(
+          return PostCard(
             post: post,
             onLikeTap: () {
-              context.showSuccessSnackBar('Success!');
-              // context.showLoadingSnackBar('Posting...');
-              // context.read<PostsCubit>().toggleLike(post.id);
+              context.read<PostsCubit>().toggleLike(post.id);
             },
             onCommentTap: () {
               // TODO: Navigate to comments

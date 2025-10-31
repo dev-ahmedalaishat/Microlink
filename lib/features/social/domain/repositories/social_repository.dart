@@ -1,10 +1,14 @@
 import '../entities/post.dart';
-import '../entities/user.dart';
+import '../entities/toggle_like_result.dart';
 
 abstract class SocialRepository {
   // Posts
-  Future<List<Post>> getLatestPosts({int page = 1, int limit = 10, bool forceRefresh = false});
-  Future<List<Post>> getMyPosts({required String userId, int page = 1, int limit = 10});
+  Future<List<Post>> getLatestPosts({
+    int page = 1,
+    int limit = 10,
+    bool forceRefresh = false,
+  });
+  Future<List<Post>> getMyPosts({int page = 1, int limit = 10});
   Future<Post> createPost({
     required String content,
     required String userId,
@@ -20,10 +24,7 @@ abstract class SocialRepository {
   });
 
   // Interactions
-  Future<Map<String, dynamic>> toggleLike({
-    required String postId,
-    required String userId,
-  });
+  Future<ToggleLikeResult> toggleLike({required String postId});
 
   // User management
   Future<String?> extractUserId();

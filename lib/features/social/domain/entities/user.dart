@@ -8,6 +8,7 @@ class User with _$User {
     required String id,
     required String name,
     String? avatarUrl,
+    String? unitDetails,
     @Default(false) bool isVerified,
   }) = _User;
 }

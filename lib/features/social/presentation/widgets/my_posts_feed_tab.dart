@@ -37,8 +37,7 @@ class _MyPostsInitial extends StatelessWidget {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              // Load posts for mock user ID '1'
-              context.read<MyPostsCubit>().loadMyPosts('1');
+              context.read<MyPostsCubit>().loadMyPosts();
             },
             child: const Text('Load My Posts'),
           ),
@@ -61,7 +60,7 @@ class _MyPostsSuccess extends StatelessWidget {
 
     return RefreshIndicator.adaptive(
       onRefresh: () async {
-        context.read<MyPostsCubit>().refreshMyPosts('1');
+        context.read<MyPostsCubit>().refreshMyPosts();
       },
       child: ListView.separated(
         itemCount: posts.length + 1,
@@ -104,7 +103,7 @@ class _MyPostsError extends StatelessWidget {
         children: [
           Text('Error: $message'),
           ElevatedButton(
-            onPressed: () => context.read<MyPostsCubit>().loadMyPosts('1'),
+            onPressed: () => context.read<MyPostsCubit>().loadMyPosts(),
             child: const Text('Retry'),
           ),
         ],
