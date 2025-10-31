@@ -40,9 +40,9 @@ class _SocialMainPageState extends State<SocialMainPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Social Feed'),
+        // title: const Text('Social Feed'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.menu),
           onPressed: () => context.go('/'),
         ),
         surfaceTintColor: Colors.transparent,

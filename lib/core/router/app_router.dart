@@ -1,7 +1,5 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-
-import '../../features/social/presentation/pages/home_page.dart';
 import '../../features/social/presentation/pages/social_main_page.dart';
 
 class AppRouter {
@@ -10,11 +8,6 @@ class AppRouter {
     routes: [
       GoRoute(
         path: '/',
-        name: 'home',
-        builder: (context, state) => const HomePage(),
-      ),
-      GoRoute(
-        path: '/social',
         name: 'social',
         builder: (context, state) => const SocialMainPage(),
       ),
