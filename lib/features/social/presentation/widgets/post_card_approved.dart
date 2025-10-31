@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:microlink/core/constants/app_constants.dart';
 import 'package:microlink/core/extensions/date_extensions.dart';
+import 'package:microlink/core/presentation/wrapper/app_svg_picture.dart';
 import 'package:microlink/core/presentation/profile_avatar.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/presentation/story_avatar_v2.dart';
@@ -278,8 +278,8 @@ class _PostCardApprovedState extends State<PostCardApproved>
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppSpacing.radiusCircular),
-      child: SvgPicture.asset(
-        iconPath,
+      child: AppSvgPicture(
+        assetPath: iconPath,
         width: AppConstants.iconM,
         height: AppConstants.iconM,
         matchTextDirection: false,

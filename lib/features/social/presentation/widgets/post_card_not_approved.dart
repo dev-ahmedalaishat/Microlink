@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:microlink/core/presentation/wrapper/app_svg_picture.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
@@ -61,8 +61,8 @@ class PostCardNotApproved extends StatelessWidget {
           ],
         ).expanded(),
         // options icon
-        SvgPicture.asset(
-          "assets/icons/ic_more_vert.svg",
+        const AppSvgPicture(
+          assetPath: "assets/icons/ic_more_vert.svg",
           // colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
         ),
       ],
@@ -130,9 +130,9 @@ class PostCardNotApproved extends StatelessWidget {
         border: Border.all(color: Colors.white.withAlpha(150), width: 3.0),
         borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
       ),
-      child: SvgPicture.asset(
-        iconAssetPath,
-        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+      child: AppSvgPicture.colored(
+        assetPath: iconAssetPath,
+        color: Colors.white,
       ).paddingAll(size * 0.2),
     );
   }

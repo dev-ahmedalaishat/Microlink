@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:microlink/core/constants/app_constants.dart';
+import 'package:microlink/core/presentation/wrapper/app_svg_picture.dart';
 import 'package:microlink/core/extensions/widget_extensions.dart';
 import 'package:microlink/core/presentation/profile_avatar.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
@@ -211,8 +211,8 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
             children: [
               // Camera icon
               IconButton(
-                icon: SvgPicture.asset(
-                  'assets/icons/ic_camera.svg',
+                icon: AppSvgPicture(
+                  assetPath: 'assets/icons/ic_camera.svg',
                   width: AppConstants.iconM,
                   height: AppConstants.iconM,
                   matchTextDirection: false,
@@ -222,8 +222,8 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                     : null,
               ),
               IconButton(
-                icon: SvgPicture.asset(
-                  'assets/icons/ic_gallery.svg',
+                icon: AppSvgPicture(
+                  assetPath: 'assets/icons/ic_gallery.svg',
                   width: AppConstants.iconM,
                   height: AppConstants.iconM,
                   matchTextDirection: false,
