@@ -59,29 +59,34 @@ class _MyPostsSuccess extends StatelessWidget {
       return const Center(child: Text('No posts yet'));
     }
 
-    return ListView.separated(
-      itemCount: posts.length + 1,
-      separatorBuilder: (context, index) => const Divider(height: 1),
-      itemBuilder: (context, index) {
-        if (index == posts.length) {
-          return const Padding(
-            padding: EdgeInsets.all(32.0),
-            child: Center(
-              child: Text(
-                "That's all",
-                style: TextStyle(color: Colors.grey, fontSize: 16),
-              ),
-            ),
-          );
-        }
-
-        final post = posts[index];
-        if (post.status == PostStatus.approved) {
-          return PostCardApproved(post: post, isMyPost: true);
-        } else {
-          return PostCardNotApproved(post: post);
-        }
+    return RefreshIndicator.adaptive(
+      onRefresh: () async {
+        context.read<MyPostsCubit>().refreshMyPosts('1');
       },
+      child: ListView.separated(
+        itemCount: posts.length + 1,
+        separatorBuilder: (context, index) => const Divider(height: 1),
+        itemBuilder: (context, index) {
+          if (index == posts.length) {
+            return const Padding(
+              padding: EdgeInsets.all(32.0),
+              child: Center(
+                child: Text(
+                  "That's all",
+                  style: TextStyle(color: Colors.grey, fontSize: 16),
+                ),
+              ),
+            );
+          }
+
+          final post = posts[index];
+          if (post.status == PostStatus.approved) {
+            return PostCardApproved(post: post, isMyPost: true);
+          } else {
+            return PostCardNotApproved(post: post);
+          }
+        },
+      ),
     );
   }
 }

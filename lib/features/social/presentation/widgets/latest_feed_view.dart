@@ -37,7 +37,6 @@ class _LatestFeedSuccess extends StatelessWidget {
       onRefresh: () async {
         context.read<PostsCubit>().refreshPosts();
       },
-
       child: ListView.separated(
         itemCount: posts.length + 1,
         separatorBuilder: (context, index) =>

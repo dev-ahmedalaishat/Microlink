@@ -32,79 +32,107 @@ class MockSocialRepository implements SocialRepository {
   }
 
   void _initializeMockPosts() {
-    _mockPosts = [
-      Post(
-        id: '1',
-        content: 'Does anyone know a good plumber? I have a leaky faucet.',
-        author: _mockUsers[0],
-        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-        status: PostStatus.approved,
-        mediaUrls: [],
-        likesCount: 3,
-        commentsCount: 2,
-        isLiked: false,
-      ),
-      Post(
-        id: '2',
-        content:
-            'Community BBQ this Saturday at 4 PM in the main courtyard. Everyone is welcome! Bring your favorite dish.',
-        author: _mockUsers[1],
-        createdAt: DateTime.now().subtract(const Duration(hours: 1)),
-        status: PostStatus.approved,
-        mediaUrls: [
-          'https://picsum.photos/400/300?random=1',
-          "https://picsum.photos/400/300?random=3",
-        ],
-        likesCount: 8,
-        commentsCount: 5,
-        isLiked: true,
-      ),
-      Post(
-        id: '3',
-        content:
-            'Has anyone seen my cat? He\'s been missing since yesterday. White with brown spots.',
-        author: _mockUsers[2],
-        createdAt: DateTime.now().subtract(const Duration(minutes: 30)),
-        status: PostStatus.pending,
-        mediaUrls: [
-          'https://picsum.photos/400/300?random=2',
-          "https://picsum.photos/400/300?random=4",
-        ],
-        likesCount: 0,
-        commentsCount: 0,
-        isLiked: false,
-      ),
-      Post(
-        id: '4',
-        content:
-            'Thank you to whoever returned my lost wallet! Faith in humanity restored.',
-        author: _mockUsers[0],
-        createdAt: DateTime.now().subtract(const Duration(minutes: 15)),
-        status: PostStatus.pending,
-        mediaUrls: [
-          'https://picsum.photos/400/300?random=2',
-          "https://picsum.photos/400/300?random=4",
-        ],
-        likesCount: 12,
-        commentsCount: 3,
-        isLiked: false,
-      ),
-      Post(
-        id: '5',
-        content:
-            'Thank you to whoever returned my lost wallet! Faith in humanity restored.',
-        author: _mockUsers[0],
-        createdAt: DateTime.now().subtract(const Duration(minutes: 15)),
-        status: PostStatus.rejected,
-        mediaUrls: [
-          'https://picsum.photos/400/300?random=2',
-          "https://picsum.photos/400/300?random=4",
-        ],
-        likesCount: 12,
-        commentsCount: 3,
-        isLiked: false,
-      ),
+    final List<String> sampleContents = [
+      'Does anyone know a good plumber? I have a leaky faucet.',
+      'Community BBQ this Saturday at 4 PM in the main courtyard. Everyone is welcome! Bring your favorite dish.',
+      'Has anyone seen my cat? He\'s been missing since yesterday. White with brown spots.',
+      'Thank you to whoever returned my lost wallet! Faith in humanity restored.',
+      'Looking for a babysitter for next weekend. Please DM if interested.',
+      'The elevator in building A is out of order again. Please use the stairs.',
+      'Free furniture available! Moving out and need to get rid of some items.',
+      'Parking spot #25 is available for rent. \$100/month.',
+      'Pool maintenance scheduled for tomorrow morning from 8-10 AM.',
+      'Lost keys near the mailboxes. Black Honda keychain. Please contact me!',
+      'Yoga class every Tuesday at 6 PM in the community room. All levels welcome.',
+      'Book club meeting this Thursday. We\'re discussing "The Great Gatsby".',
+      'Anyone interested in carpooling to downtown? I leave at 8 AM daily.',
+      'Noise complaint about unit 304. Please keep it down after 10 PM.',
+      'Garden club is looking for new members! Love plants? Join us!',
+      'Security camera footage needed for incident on Monday night.',
+      'Thanksgiving potluck dinner - sign up sheet in the lobby.',
+      'Dog walker available for hire. Very reliable and loves pets!',
+      'Internet outage in building C. Technician coming tomorrow.',
+      'Movie night this Friday - we\'re watching a classic comedy.',
+      'Recycling pickup delayed until next Wednesday due to holiday.',
+      'New fitness equipment installed in the gym. Check it out!',
+      'Bake sale fundraiser for the local school this weekend.',
+      'Anyone missing a red bicycle? Found it near building entrance.',
+      'Maintenance request: Broken light fixture in hallway.',
+      'Community garden spaces available for spring planting.',
+      'Fire drill scheduled for next Tuesday at 2 PM. Please participate.',
+      'Lost and found items available in the management office.',
+      'Snow removal service begins Monday. Please move cars as needed.',
+      'Holiday decorations contest! Submit your entries by December 15th.',
+      'Tenant meeting next month to discuss new policies.',
+      'Power washing of building exteriors scheduled for next week.',
+      'New delivery boxes installed near main entrance.',
+      'Guest parking is limited. Please use designated spots only.',
+      'Piano lessons available! Contact Sarah in unit 207.',
+      'Pest control service coming Thursday. Please secure food items.',
+      'Community bulletin board needs updating. Volunteers wanted.',
+      'Water heater maintenance in building B this weekend.',
+      'New security patrol schedule starts Monday.',
+      'Craft workshop for kids this Saturday in the activity room.',
+      'Garage sale permits available at the management office.',
+      'Landscaping work begins next week. Expect some noise.',
+      'Tennis court reservations now available online.',
+      'Package delivery issues? Please report to management.',
+      'Weekly newsletter available - check your mailbox.',
+      'Heating system inspection scheduled for all units.',
+      'New playground equipment installed! Kids will love it.',
+      'Neighborhood watch meeting every first Monday.',
+      'Seasonal pool hours change starting next month.',
+      'Building insurance renewal meeting for homeowners.',
+      'Emergency contact information update required.',
+      'Storage unit rentals available. Limited spaces left.',
+      'Community Wi-Fi password has been updated.',
+      'Volunteer needed for holiday event planning committee.',
+      'Trash collection schedule change due to construction.',
     ];
+
+    _mockPosts = [];
+
+    // Generate 60 posts with varied data
+    for (int i = 0; i < 60; i++) {
+      final contentIndex = i % sampleContents.length;
+      final userIndex = i % _mockUsers.length;
+      final hoursAgo = i * 2; // Spread posts over time
+
+      // Mix of approved, pending, and rejected posts
+      PostStatus status;
+      if (i % 4 == 0) {
+        status = PostStatus.pending;
+      } else if (i % 7 == 0) {
+        status = PostStatus.rejected;
+      } else {
+        status = PostStatus.approved;
+      }
+
+      // Some posts have media, some don't
+      List<String> mediaUrls = [];
+      if (i % 3 == 0) {
+        mediaUrls = ['https://picsum.photos/400/300?random=${i + 1}'];
+      } else if (i % 5 == 0) {
+        mediaUrls = [
+          'https://picsum.photos/400/300?random=${i + 1}',
+          'https://picsum.photos/400/300?random=${i + 2}',
+        ];
+      }
+
+      _mockPosts.add(
+        Post(
+          id: (i + 1).toString(),
+          content: sampleContents[contentIndex],
+          author: _mockUsers[userIndex],
+          createdAt: DateTime.now().subtract(Duration(hours: hoursAgo)),
+          status: status,
+          mediaUrls: mediaUrls,
+          likesCount: (i * 3) % 15, // Varied like counts
+          commentsCount: (i * 2) % 8, // Varied comment counts
+          isLiked: i % 4 == 1, // Some posts are liked
+        ),
+      );
+    }
   }
 
   @override
