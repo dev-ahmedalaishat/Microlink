@@ -10,7 +10,8 @@ import '../cubit/posts/posts_state.dart';
 import 'post_card_approved.dart';
 
 class LatestFeedTab extends StatelessWidget {
-  const LatestFeedTab({super.key});
+  final VoidCallback onPostSubmitted;
+  const LatestFeedTab({super.key, required this.onPostSubmitted});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,10 @@ class LatestFeedTab extends StatelessWidget {
         return state.when(
           initial: () => const Center(child: Text('Welcome to Social Feed')),
           loading: () => const Center(child: CircularProgressIndicator()),
-          success: (posts) => _LatestFeedSuccess(posts: posts),
+          success: (posts) => _LatestFeedSuccess(
+            posts: posts,
+            onPostSubmitted: onPostSubmitted,
+          ),
           error: (message) => _LatestFeedError(message: message),
         );
       },
@@ -29,8 +33,12 @@ class LatestFeedTab extends StatelessWidget {
 
 class _LatestFeedSuccess extends StatelessWidget {
   final List<Post> posts;
+  final VoidCallback onPostSubmitted;
 
-  const _LatestFeedSuccess({required this.posts});
+  const _LatestFeedSuccess({
+    required this.posts,
+    required this.onPostSubmitted,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +67,7 @@ class _LatestFeedSuccess extends StatelessWidget {
           return PostCardApproved(
             post: post,
             onLikeTap: () {
-              context.showSuccessSnackBar('Success!');
-              // context.showLoadingSnackBar('Posting...');
-              // context.read<PostsCubit>().toggleLike(post.id);
+              context.read<PostsCubit>().toggleLike(post.id);
             },
             onCommentTap: () {
               // TODO: Navigate to comments

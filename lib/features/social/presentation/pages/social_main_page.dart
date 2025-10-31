@@ -120,7 +120,14 @@ class _SocialMainPageState extends State<SocialMainPage>
         },
         body: TabBarView(
           controller: _tabController,
-          children: const [LatestFeedTab(), MyPostsFeedTab()],
+          children: [
+            LatestFeedTab(
+              onPostSubmitted: () {
+                _tabController.animateTo(1);
+              },
+            ),
+            MyPostsFeedTab(),
+          ],
         ),
       ),
 
@@ -168,9 +175,7 @@ class _SocialMainPageState extends State<SocialMainPage>
   Widget _buildFloatingActionButton() {
     return FloatingActionButton(
       onPressed: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Post creation coming soon!')),
-        );
+        // Demo: Show different snackbar types
       },
       child: const Icon(Icons.add),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../theme/color_palette.dart';
+import 'package:lottie/lottie.dart';
+import 'package:microlink/core/extensions/widget_extensions.dart';
 
 /// Custom snackbar types
 enum SnackBarType { success, error, warning, info, loading }
@@ -8,56 +9,37 @@ enum SnackBarType { success, error, warning, info, loading }
 class CustomSnackBar {
   final String message;
   final SnackBarType type;
-  final Duration duration;
-  final bool showIcon;
-  final IconData? customIcon;
   final VoidCallback? onTap;
+  final Widget? leading;
   final Widget? trailing;
+  final Duration duration;
   final bool showCloseButton;
 
   const CustomSnackBar({
     required this.message,
     this.type = SnackBarType.info,
-    this.duration = const Duration(seconds: 3),
-    this.showIcon = true,
-    this.customIcon,
     this.onTap,
+    this.leading,
     this.trailing,
+    this.duration = const Duration(seconds: 3),
     this.showCloseButton = false,
   });
 
-  /// Get the appropriate icon for the snackbar type
-  IconData get icon {
-    if (customIcon != null) return customIcon!;
-
-    switch (type) {
-      case SnackBarType.success:
-        return Icons.check_circle_rounded;
-      case SnackBarType.error:
-        return Icons.error_rounded;
-      case SnackBarType.warning:
-        return Icons.warning_rounded;
-      case SnackBarType.info:
-        return Icons.info_rounded;
-      case SnackBarType.loading:
-        return Icons.hourglass_empty_rounded;
-    }
-  }
-
   /// Get the appropriate background color for the snackbar type
   Color get backgroundColor {
-    switch (type) {
-      case SnackBarType.success:
-        return AppColors.success;
-      case SnackBarType.error:
-        return AppColors.error;
-      case SnackBarType.warning:
-        return AppColors.warning;
-      case SnackBarType.info:
-        return AppColors.info;
-      case SnackBarType.loading:
-        return AppColors.textSecondary;
-    }
+    return Color(0XFF2B2B31);
+    // switch (type) {
+    //   case SnackBarType.success:
+    //     return AppColors.success;
+    //   case SnackBarType.error:
+    //     return AppColors.error;
+    //   case SnackBarType.warning:
+    //     return AppColors.warning;
+    //   case SnackBarType.info:
+    //     return AppColors.info;
+    //   case SnackBarType.loading:
+    //     return AppColors.textSecondary;
+    // }
   }
 
   /// Get the appropriate icon color for the snackbar type
@@ -77,9 +59,9 @@ class CustomSnackBar {
     final snackBar = SnackBar(
       content: _SnackBarContent(
         message: message,
-        icon: showIcon ? icon : null,
         iconColor: iconColor,
         textColor: textColor,
+        leading: leading,
         trailing: trailing,
         showCloseButton: showCloseButton,
         onClose: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
@@ -113,18 +95,18 @@ class CustomSnackBar {
 /// Internal widget for snackbar content
 class _SnackBarContent extends StatelessWidget {
   final String message;
-  final IconData? icon;
   final Color iconColor;
   final Color textColor;
+  final Widget? leading;
   final Widget? trailing;
   final bool showCloseButton;
   final VoidCallback onClose;
 
   const _SnackBarContent({
     required this.message,
-    this.icon,
     required this.iconColor,
     required this.textColor,
+    this.leading,
     this.trailing,
     required this.showCloseButton,
     required this.onClose,
@@ -134,10 +116,7 @@ class _SnackBarContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if (icon != null) ...[
-          Icon(icon, color: iconColor, size: 24),
-          const SizedBox(width: 12),
-        ],
+        if (leading != null) ...[leading!, const SizedBox(width: 12)],
         Expanded(
           child: Text(
             message,
@@ -172,8 +151,26 @@ extension SnackBarExtension on BuildContext {
     CustomSnackBar(
       message: message,
       type: SnackBarType.success,
+      leading: SizedBox(
+        width: 32,
+        height: 32,
+        child: Lottie.asset(
+          "assets/lottie/success.json",
+          fit: BoxFit.contain,
+          repeat: false,
+        ),
+      ),
+      trailing: InkWell(
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
+        onTap: () => onTap?.call(),
+        child: Icon(
+          Icons.arrow_forward_ios,
+          color: Colors.white,
+          size: 10,
+        ).paddingAll(11),
+      ),
       duration: duration ?? const Duration(seconds: 3),
-      onTap: onTap,
+      // onTap: onTap,
     ).show(this);
   }
 
@@ -187,6 +184,15 @@ extension SnackBarExtension on BuildContext {
       message: message,
       type: SnackBarType.error,
       duration: duration ?? const Duration(seconds: 4),
+      leading: SizedBox(
+        width: 32,
+        height: 32,
+        child: Lottie.asset(
+          "assets/lottie/error.json",
+          fit: BoxFit.contain,
+          repeat: false,
+        ).scale(2),
+      ),
       onTap: onTap,
     ).show(this);
   }
@@ -201,7 +207,40 @@ extension SnackBarExtension on BuildContext {
       message: message,
       type: SnackBarType.warning,
       duration: duration ?? const Duration(seconds: 3),
+      leading: SizedBox(
+        width: 32,
+        height: 32,
+        child: Lottie.asset(
+          "assets/lottie/warning.json",
+          fit: BoxFit.contain,
+          repeat: false,
+        ),
+      ),
       onTap: onTap,
+    ).show(this);
+  }
+
+  /// Show a no internet snackbar
+  void showNoInternetSnackBar(
+    String message, {
+    Duration? duration,
+    VoidCallback? onTap,
+  }) {
+    CustomSnackBar(
+      message: message,
+      type: SnackBarType.warning,
+      duration: const Duration(days: 365),
+      leading: SizedBox(
+        width: 32,
+        height: 32,
+        child: Lottie.asset(
+          "assets/lottie/no_internet.json",
+          fit: BoxFit.contain,
+          repeat: false,
+        ),
+      ),
+      onTap: onTap,
+      showCloseButton: true,
     ).show(this);
   }
 
@@ -224,15 +263,22 @@ extension SnackBarExtension on BuildContext {
     CustomSnackBar(
       message: message,
       type: SnackBarType.loading,
-      showIcon: true,
-      trailing: SizedBox(
-        width: 20,
-        height: 20,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        ),
+      leading: SizedBox(
+        width: 32,
+        height: 32,
+        child: Lottie.asset(
+          "assets/lottie/loading.json",
+          fit: BoxFit.contain,
+        ).scale(2),
       ),
+      // trailing: SizedBox(
+      //   width: 20,
+      //   height: 20,
+      //   child: CircularProgressIndicator(
+      //     strokeWidth: 2,
+      //     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      //   ),
+      // ),
     ).show(this);
   }
 

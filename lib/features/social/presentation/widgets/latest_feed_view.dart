@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:microlink/core/extensions/widget_extensions.dart';
+import 'package:microlink/features/social/presentation/widgets/post_card_approved.dart';
 import 'package:share_plus/share_plus.dart';
-
 import '../../domain/entities/post.dart';
 import '../cubit/posts/posts_cubit.dart';
 import '../cubit/posts/posts_state.dart';
-import 'post_card.dart';
 
 class LatestFeedView extends StatelessWidget {
   const LatestFeedView({super.key});
@@ -44,7 +43,7 @@ class _LatestFeedSuccess extends StatelessWidget {
             const Divider(height: 1).screenPadding(),
         itemBuilder: (context, index) {
           final post = posts[index];
-          return PostCard(
+          return PostCardApproved(
             post: post,
             onLikeTap: () {
               context.read<PostsCubit>().toggleLike(post.id);
