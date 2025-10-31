@@ -6,8 +6,8 @@ import '../../domain/entities/post.dart';
 import '../cubit/posts/posts_cubit.dart';
 import '../cubit/posts/posts_state.dart';
 
-class MyPostsFeedView extends StatelessWidget {
-  const MyPostsFeedView({super.key});
+class MyPostsFeedTab extends StatelessWidget {
+  const MyPostsFeedTab({super.key});
 
   @override
   Widget build(BuildContext context) {

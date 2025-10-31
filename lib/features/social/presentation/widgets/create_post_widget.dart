@@ -5,7 +5,6 @@ import 'package:microlink/core/constants/app_constants.dart';
 import 'package:microlink/core/extensions/widget_extensions.dart';
 import 'package:microlink/core/presentation/profile_avatar.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
-import 'package:microlink/core/presentation/story_avatar_v2.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/core/theme/text_styles.dart';
 import 'dart:io';
@@ -109,81 +108,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
             _buildBottomActions(context),
           ],
         ).expanded(),
-        // Column(
-        //   mainAxisSize: MainAxisSize.min,
-        //   children: [
-        //     _buildHeader(context),
-        //     _buildInlineContent(context),
-        //     _buildBottomActions(context),
-        //   ],
-        // ),
       ],
-    );
-
-    // return Container(
-    //   decoration: BoxDecoration(
-    //     color: Theme.of(context).scaffoldBackgroundColor,
-    //     border: Border.all(
-    //       color: Theme.of(context).colorScheme.onSurface.withAlpha(26),
-    //       width: 1,
-    //     ),
-    //     borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-    //   ),
-    //   child: Column(
-    //     mainAxisSize: MainAxisSize.min,
-    //     children: [
-    //       _buildHeader(context),
-    //       _buildInlineContent(context),
-    //       _buildBottomActions(context),
-    //     ],
-    //   ),
-    // );
-  }
-
-  Widget _buildHeader(BuildContext context) {
-    return Row(
-      children: [
-        const StoryAvatarV2(),
-        SpacerH.s,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Text('Hi neighbors,', style: AppTextStyles.userName)],
-        ).expanded(),
-        SpacerH.s,
-      ],
-    ).paddingSymmetric(
-      horizontal: AppSpacing.screenPadding,
-      vertical: AppSpacing.lg,
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Text input
-          TextField(
-            controller: _textController,
-            maxLines: null,
-            minLines: 5,
-            decoration: InputDecoration(
-              hintText:
-                  'I lost my cat, Luna, this morning near the community garden area.\nIf anyone sees her, please message me here or call/text me at 050-123-4567.\nThank you so much for your help! 🙏',
-              hintStyle: AppTextStyles.inputHint,
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              contentPadding: EdgeInsets.zero,
-            ),
-            style: AppTextStyles.bodyMedium,
-          ),
-          SpacerV.l,
-
-          // Selected images
-          if (_selectedImages.isNotEmpty) ...[_buildImagePreview(), SpacerV.l],
-        ],
-      ).paddingSymmetric(horizontal: AppSpacing.screenPadding),
     );
   }
 
@@ -211,22 +136,6 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
           maxLines: 5,
           minLines: 1,
         ),
-        // Text input
-        // TextField(
-        //   controller: _textController,
-        //   maxLines: 3,
-        //   minLines: 2,
-        //   decoration: InputDecoration(
-        //     hintText: 'What\'s on your mind?',
-        //     hintStyle: AppTextStyles.inputHint,
-        //     border: InputBorder.none,
-        //     enabledBorder: InputBorder.none,
-        //     focusedBorder: InputBorder.none,
-        //     contentPadding: EdgeInsets.zero,
-        //   ),
-        //   style: AppTextStyles.bodyMedium,
-        // ),
-
         // Selected images
         if (_selectedImages.isNotEmpty) ...[SpacerV.m, _buildImagePreview()],
       ],
@@ -312,7 +221,6 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                     ? () => _pickImage(ImageSource.camera)
                     : null,
               ),
-              SpacerH.xs,
               IconButton(
                 icon: SvgPicture.asset(
                   'assets/icons/ic_gallery.svg',

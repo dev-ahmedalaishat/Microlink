@@ -8,8 +8,8 @@ import '../cubit/posts/posts_cubit.dart';
 import '../cubit/posts/posts_state.dart';
 import 'post_card_approved.dart';
 
-class LatestFeedView extends StatelessWidget {
-  const LatestFeedView({super.key});
+class LatestFeedTab extends StatelessWidget {
+  const LatestFeedTab({super.key});
 
   @override
   Widget build(BuildContext context) {

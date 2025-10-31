@@ -19,6 +19,6 @@ Future<void> init() async {
 
   //! Cubits
   sl.registerFactory(() => PostsCubit(sl()));
-  sl.registerFactory(() => MyPostsCubit(sl()));
+  sl.registerFactory(() => MyPostsCubit(sl())..loadMyPosts("1"));
   sl.registerFactory(() => PostCreationCubit(sl()));
 }

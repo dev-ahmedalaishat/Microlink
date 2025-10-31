@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:microlink/core/extensions/date_extensions.dart';
-import 'package:microlink/core/presentation/profile_avatar.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
@@ -62,6 +60,11 @@ class PostCardNotApproved extends StatelessWidget {
             ),
           ],
         ).expanded(),
+        // options icon
+        SvgPicture.asset(
+          "assets/icons/ic_more_vert.svg",
+          // colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+        ),
       ],
     );
   }
@@ -78,52 +81,39 @@ class PostCardNotApproved extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade300, width: 1),
         borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
       ),
-      child: Opacity(
-        opacity: 0.6,
-        child: Column(
-          children: [
-            // Post content
-            Text(post.content, style: TextStyle(color: Colors.grey.shade600)),
+      child: Column(
+        children: [
+          // Post content
+          Text(post.content, style: TextStyle(color: Colors.grey.shade600)),
 
-            // Media if available
-            if (post.mediaUrls.isNotEmpty) ...[
-              SpacerV.s,
-              _buildMediaSection(context, padding: EdgeInsetsGeometry.zero),
-            ],
+          // Media if available
+          if (post.mediaUrls.isNotEmpty) ...[
+            SpacerV.s,
+            _buildMediaSection(context),
           ],
-        ),
-      ),
+        ],
+      ).opacity(0.6),
     );
   }
 
-  Widget _buildMediaSection(
-    BuildContext context, {
-    EdgeInsetsGeometry padding = const EdgeInsets.symmetric(
-      horizontal: AppSpacing.screenPadding,
-    ),
-  }) {
+  Widget _buildMediaSection(BuildContext context) {
     final imageHeight = MediaQuery.of(context).size.width * 0.3;
     final imageWidth = imageHeight * 0.9;
 
-    return SizedBox(
-      height: imageHeight,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: post.mediaUrls.length,
-        separatorBuilder: (context, index) => SpacerH.xs,
-        padding: padding,
-        itemBuilder: (context, index) {
-          return Container(
-            width: imageWidth,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(AppSpacing.postImageRadius),
-            ),
-            child: const Icon(Icons.image, size: 50, color: Colors.grey),
-          );
-        },
-      ),
-    );
+    return ListView.separated(
+      scrollDirection: Axis.horizontal,
+      itemCount: post.mediaUrls.length,
+      separatorBuilder: (context, index) => SpacerH.xs,
+      padding: EdgeInsetsGeometry.zero,
+      itemBuilder: (context, index) {
+        return const Icon(Icons.image, size: 50, color: Colors.grey)
+            .sized(width: imageWidth, height: imageHeight)
+            .backgroundWithBorderRadius(
+              Colors.grey.shade200,
+              BorderRadius.all(Radius.circular(AppSpacing.postImageRadius)),
+            );
+      },
+    ).sized(height: imageHeight, width: double.infinity);
   }
 
   /// Returns an SVG icon widget with white icon on colored background with stroke
@@ -140,13 +130,10 @@ class PostCardNotApproved extends StatelessWidget {
         border: Border.all(color: Colors.white.withAlpha(150), width: 3.0),
         borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
       ),
-      child: Padding(
-        padding: EdgeInsets.all(size * 0.2),
-        child: SvgPicture.asset(
-          iconAssetPath,
-          colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-        ),
-      ),
+      child: SvgPicture.asset(
+        iconAssetPath,
+        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+      ).paddingAll(size * 0.2),
     );
   }
 }

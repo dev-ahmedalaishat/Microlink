@@ -6,8 +6,8 @@ import 'package:microlink/features/social/presentation/widgets/stories_section.d
 import '../../../../core/extensions/widget_extensions.dart';
 import '../../../../core/theme/color_palette.dart';
 import '../cubit/posts/posts_cubit.dart';
-import '../widgets/latest_feed_view.dart';
-import '../widgets/my_posts_feed_view.dart';
+import '../widgets/latest_feed_tab.dart';
+import '../widgets/my_posts_feed_tab.dart';
 import '../widgets/create_post_widget.dart';
 
 class SocialMainPage extends StatefulWidget {
@@ -120,7 +120,7 @@ class _SocialMainPageState extends State<SocialMainPage>
         },
         body: TabBarView(
           controller: _tabController,
-          children: const [LatestFeedView(), MyPostsFeedView()],
+          children: const [LatestFeedTab(), MyPostsFeedTab()],
         ),
       ),
 
