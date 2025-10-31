@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../core/theme/spacing.dart';
+import 'package:microlink/features/social/presentation/widgets/post_card_approved.dart';
+import 'package:microlink/features/social/presentation/widgets/post_card_not_approved.dart';
 import '../../domain/entities/post.dart';
 import '../cubit/posts/posts_cubit.dart';
 import '../cubit/posts/posts_state.dart';
-import 'my_post_card.dart';
 
 class MyPostsFeedView extends StatelessWidget {
   const MyPostsFeedView({super.key});
@@ -61,20 +60,27 @@ class _MyPostsSuccess extends StatelessWidget {
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.all(AppSpacing.screenPadding),
-      itemCount: posts.length,
+      itemCount: posts.length + 1,
       separatorBuilder: (context, index) => const Divider(height: 1),
       itemBuilder: (context, index) {
+        if (index == posts.length) {
+          return const Padding(
+            padding: EdgeInsets.all(32.0),
+            child: Center(
+              child: Text(
+                "That's all",
+                style: TextStyle(color: Colors.grey, fontSize: 16),
+              ),
+            ),
+          );
+        }
+
         final post = posts[index];
-        return MyPostCard(
-          post: post,
-          onTap: () {
-            // TODO: Navigate to post details or edit
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Tapped on ${post.status.name} post')),
-            );
-          },
-        );
+        if (post.status == PostStatus.approved) {
+          return PostCardApproved(post: post, isMyPost: true);
+        } else {
+          return PostCardNotApproved(post: post);
+        }
       },
     );
   }

@@ -80,8 +80,26 @@ class MockSocialRepository implements SocialRepository {
             'Thank you to whoever returned my lost wallet! Faith in humanity restored.',
         author: _mockUsers[0],
         createdAt: DateTime.now().subtract(const Duration(minutes: 15)),
-        status: PostStatus.approved,
-        mediaUrls: [],
+        status: PostStatus.pending,
+        mediaUrls: [
+          'https://picsum.photos/400/300?random=2',
+          "https://picsum.photos/400/300?random=4",
+        ],
+        likesCount: 12,
+        commentsCount: 3,
+        isLiked: false,
+      ),
+      Post(
+        id: '5',
+        content:
+            'Thank you to whoever returned my lost wallet! Faith in humanity restored.',
+        author: _mockUsers[0],
+        createdAt: DateTime.now().subtract(const Duration(minutes: 15)),
+        status: PostStatus.rejected,
+        mediaUrls: [
+          'https://picsum.photos/400/300?random=2',
+          "https://picsum.photos/400/300?random=4",
+        ],
         likesCount: 12,
         commentsCount: 3,
         isLiked: false,

@@ -2,34 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:microlink/core/constants/app_constants.dart';
 import 'package:microlink/core/extensions/date_extensions.dart';
+import 'package:microlink/core/presentation/profile_avatar.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/presentation/story_avatar_v2.dart';
 import 'package:microlink/core/theme/spacing.dart';
-import 'package:share_plus/share_plus.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/extensions/widget_extensions.dart';
 import '../../domain/entities/post.dart';
 import 'comments_bottom_sheet.dart';
 
-class PostCard extends StatefulWidget {
+class PostCardApproved extends StatefulWidget {
   final Post post;
+  final bool isMyPost;
   final VoidCallback? onLikeTap;
   final VoidCallback? onCommentTap;
   final VoidCallback? onShareTap;
 
-  const PostCard({
+  const PostCardApproved({
     super.key,
     required this.post,
+    this.isMyPost = false,
     this.onLikeTap,
     this.onCommentTap,
     this.onShareTap,
   });
 
   @override
-  State<PostCard> createState() => _PostCardState();
+  State<PostCardApproved> createState() => _PostCardApprovedState();
 }
 
-class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
+class _PostCardApprovedState extends State<PostCardApproved>
+    with TickerProviderStateMixin {
   late AnimationController _likeAnimationController;
   late AnimationController _commentAnimationController;
   late AnimationController _shareAnimationController;
@@ -110,6 +113,69 @@ class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
         // Post header
         SpacerV.l,
         _buildPostHeader().screenPadding(),
+        if (widget.post.status == PostStatus.approved)
+          _buildApprovedPostContent()
+        else
+          _buildNotApprovedPostContent(),
+      ],
+    );
+  }
+
+  Widget _buildPostHeader() {
+    return Row(
+      children: [
+        if (widget.isMyPost) ProfileAvatar() else StoryAvatarV2(),
+        SpacerH.s,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.post.author.name, style: AppTextStyles.userName),
+            Text(
+              widget.post.createdAt.timeAgo(),
+              style: AppTextStyles.timestamp,
+            ),
+          ],
+        ).expanded(),
+      ],
+    );
+  }
+
+  Widget _buildNotApprovedPostContent() {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: AppSpacing.screenPadding,
+        vertical: AppSpacing.md,
+      ),
+      padding: EdgeInsets.all(AppSpacing.sm),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        border: Border.all(color: Colors.grey.shade300, width: 1),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+      ),
+      child: Opacity(
+        opacity: 0.6,
+        child: Column(
+          children: [
+            // Post content
+            Text(
+              widget.post.content,
+              style: TextStyle(color: Colors.grey.shade600),
+            ),
+
+            // Media if available
+            if (widget.post.mediaUrls.isNotEmpty) ...[
+              SpacerV.s,
+              _buildMediaSection(padding: EdgeInsetsGeometry.zero),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildApprovedPostContent() {
+    return Column(
+      children: [
         SpacerV.l,
         // Post content
         Text(widget.post.content).screenPadding(),
@@ -128,26 +194,11 @@ class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildPostHeader() {
-    return Row(
-      children: [
-        StoryAvatarV2(),
-        SpacerH.s,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.post.author.name, style: AppTextStyles.userName),
-            Text(
-              widget.post.createdAt.timeAgo(),
-              style: AppTextStyles.timestamp,
-            ),
-          ],
-        ).expanded(),
-      ],
-    );
-  }
-
-  Widget _buildMediaSection() {
+  Widget _buildMediaSection({
+    EdgeInsetsGeometry padding = const EdgeInsets.symmetric(
+      horizontal: AppSpacing.screenPadding,
+    ),
+  }) {
     final imageHeight = MediaQuery.of(context).size.width * 1.05;
 
     if (widget.post.mediaUrls.length == 1) {
@@ -169,7 +220,7 @@ class _PostCardState extends State<PostCard> with TickerProviderStateMixin {
         scrollDirection: Axis.horizontal,
         itemCount: widget.post.mediaUrls.length,
         separatorBuilder: (context, index) => SpacerH.xs,
-        padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+        padding: padding,
         itemBuilder: (context, index) {
           return Container(
             width: imageWidth,

@@ -6,7 +6,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../domain/entities/post.dart';
 import '../cubit/posts/posts_cubit.dart';
 import '../cubit/posts/posts_state.dart';
-import 'post_card.dart';
+import 'post_card_approved.dart';
 
 class LatestFeedView extends StatelessWidget {
   const LatestFeedView({super.key});
@@ -39,12 +39,24 @@ class _LatestFeedSuccess extends StatelessWidget {
       },
 
       child: ListView.separated(
-        itemCount: posts.length,
+        itemCount: posts.length + 1,
         separatorBuilder: (context, index) =>
             const Divider(height: 1).screenPadding(),
         itemBuilder: (context, index) {
+          if (index == posts.length) {
+            return const Padding(
+              padding: EdgeInsets.all(32.0),
+              child: Center(
+                child: Text(
+                  "That's all",
+                  style: TextStyle(color: Colors.grey, fontSize: 16),
+                ),
+              ),
+            );
+          }
+
           final post = posts[index];
-          return PostCard(
+          return PostCardApproved(
             post: post,
             onLikeTap: () {
               context.read<PostsCubit>().toggleLike(post.id, '1');
