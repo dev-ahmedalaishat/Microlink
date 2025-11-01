@@ -22,7 +22,6 @@ abstract class SocialRepository {
   Future<Comment> addComment({
     required String postId,
     required String content,
-    required String userId,
   });
 
   // Interactions

@@ -97,6 +97,7 @@ class _SocialMainPageState extends State<SocialMainPage>
                 builder: (context, state) {
                   return CreatePostWidget(
                         onPostClick: (params) {
+                          FocusScope.of(context).unfocus();
                           context.read<PostCreationCubit>().createPost(params);
                         },
                       )

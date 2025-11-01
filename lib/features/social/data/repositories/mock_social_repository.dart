@@ -309,14 +309,13 @@ class MockSocialRepository implements SocialRepository {
   Future<Comment> addComment({
     required String postId,
     required String content,
-    required String userId,
   }) async {
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 600));
 
     // Find the user who is adding the comment
     final User author = _mockUsers.firstWhere(
-      (user) => user.id == userId,
+      (user) => user.id == "1",
       orElse: () =>
           const User(id: '1', name: 'You', unitDetails: 'Building 1, Unit 101'),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:microlink/core/extensions/widget_extensions.dart';
 import 'package:microlink/core/presentation/profile_avatar.dart';
 import 'package:microlink/core/presentation/shimmer/comments_shimmer.dart';
@@ -26,10 +27,6 @@ class CommentsBottomSheet extends StatelessWidget {
               CommentsCubit(context.read<SocialRepository>())
                 ..loadComments(postId),
         ),
-        BlocProvider<AddCommentCubit>(
-          create: (context) =>
-              AddCommentCubit(context.read<SocialRepository>()),
-        ),
       ],
       child: CommentsBottomSheetContent(postId: postId),
     );
@@ -49,6 +46,7 @@ class CommentsBottomSheetContent extends StatefulWidget {
 class _CommentsBottomSheetContentState
     extends State<CommentsBottomSheetContent> {
   final TextEditingController _commentController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   bool _hasText = false;
 
   @override
@@ -61,6 +59,7 @@ class _CommentsBottomSheetContentState
   void dispose() {
     _commentController.removeListener(_onTextChanged);
     _commentController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -73,102 +72,90 @@ class _CommentsBottomSheetContentState
     }
   }
 
+  void _scrollToEnd() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<AddCommentCubit, AddCommentState>(
-          listener: (context, state) {
-            state.maybeWhen(
-              success: (newComment) {
-                _commentController.clear();
-                // Add the new comment to the list instead of refreshing
-                context.read<CommentsCubit>().addNewComment(newComment);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Comment added successfully')),
-                );
-              },
-              error: (message) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('Error: $message')));
-              },
-              orElse: () {},
-            );
-          },
-        ),
-      ],
-      child: Padding(
-        padding: EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top,
-          bottom:
-              MediaQuery.of(context).viewInsets.bottom +
-              MediaQuery.of(context).padding.bottom,
-        ),
-        child: DraggableScrollableSheet(
-          initialChildSize: 0.75,
-          minChildSize: 0.5,
-          maxChildSize: 0.95,
-          builder: (context, scrollController) {
-            return Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(AppSpacing.radiusXLarge),
-                ),
+    return Padding(
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top,
+        bottom:
+            MediaQuery.of(context).viewInsets.bottom +
+            MediaQuery.of(context).padding.bottom,
+      ),
+      child: DraggableScrollableSheet(
+        initialChildSize: 0.75,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        builder: (context, scrollController) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(AppSpacing.radiusXLarge),
               ),
-              child: Column(
-                children: [
-                  _buildHeader(context),
-                  BlocBuilder<CommentsCubit, CommentsState>(
-                    builder: (context, state) {
-                      return state.when(
-                        initial: () => const SizedBox.shrink(),
-                        loading: () => const CommentsShimmer().expanded(),
-                        success: (comments) => Column(
-                          children: [
-                            ListView.separated(
-                              controller: scrollController,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppSpacing.screenPadding,
-                                vertical: AppSpacing.md,
-                              ),
-                              itemCount: comments.length,
-                              separatorBuilder: (context, index) => SpacerV.l,
-                              itemBuilder: (context, index) {
-                                return _buildCommentItem(comments[index]);
-                              },
-                            ).expanded(),
-                            _buildCommentInput(context),
-                          ],
-                        ).expanded(),
-                        error: (message) => Expanded(
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('Error loading comments: $message'),
-                                const SizedBox(height: 16),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    context
-                                        .read<CommentsCubit>()
-                                        .refreshComments(widget.postId);
-                                  },
-                                  child: const Text('Retry'),
-                                ),
-                              ],
+            ),
+            child: Column(
+              children: [
+                _buildHeader(context),
+                BlocBuilder<CommentsCubit, CommentsState>(
+                  builder: (context, state) {
+                    return state.when(
+                      initial: () => const SizedBox.shrink(),
+                      loading: () => const CommentsShimmer().expanded(),
+                      success: (comments) => Column(
+                        children: [
+                          ListView.separated(
+                            controller: _scrollController,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppSpacing.screenPadding,
+                              vertical: AppSpacing.md,
                             ),
+                            itemCount: comments.length,
+                            separatorBuilder: (context, index) => SpacerV.l,
+                            itemBuilder: (context, index) {
+                              return _buildCommentItem(comments[index]);
+                            },
+                          ).expanded(),
+                          _buildCommentInput(context),
+                        ],
+                      ).expanded(),
+                      error: (message) => Expanded(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Error loading comments: $message'),
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                onPressed: () {
+                                  context.read<CommentsCubit>().refreshComments(
+                                    widget.postId,
+                                  );
+                                },
+                                child: const Text('Retry'),
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -219,20 +206,29 @@ class _CommentsBottomSheetContentState
           ),
         ),
         SpacerH.s,
-        IconButton(
-          icon: Icon(
-            Icons.more_vert,
-            color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
-            size: 20,
+        if (comment.isPending)
+          Lottie.asset(
+            width: 20,
+            height: 20,
+            "assets/lottie/dot_loading.json",
+            fit: BoxFit.contain,
+            repeat: true,
+          ).scale(5).paddingOnly(end: AppSpacing.lg),
+        if (!comment.isPending)
+          IconButton(
+            icon: Icon(
+              Icons.more_vert,
+              color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
+              size: 20,
+            ),
+            onPressed: () {
+              // Show comment options
+            },
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
           ),
-          onPressed: () {
-            // Show comment options
-          },
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
-        ),
       ],
-    );
+    ).opacity(comment.isPending ? 0.6 : 1.0);
   }
 
   Widget _buildCommentInput(BuildContext context) {
@@ -272,58 +268,38 @@ class _CommentsBottomSheetContentState
                 minLines: 1,
               ).expanded(),
               if (_hasText) ...[
-                BlocBuilder<AddCommentCubit, AddCommentState>(
-                  builder: (context, addCommentState) {
-                    final isLoading = addCommentState.maybeWhen(
-                      loading: () => true,
-                      orElse: () => false,
-                    );
+                TextButton(
+                  onPressed: () async {
+                    final content = _commentController.text.trim();
+                    if (content.isNotEmpty) {
+                      // Hide keyboard
+                      FocusScope.of(context).unfocus();
+                      // Scroll to the end of the list
+                      _scrollToEnd();
 
-                    return TextButton(
-                      onPressed: isLoading
-                          ? null
-                          : () async {
-                              final content = _commentController.text.trim();
-                              if (content.isNotEmpty) {
-                                // Get current user ID (in a real app, this would come from auth)
-                                final repository = context
-                                    .read<SocialRepository>();
-                                final addCommentCubit = context
-                                    .read<AddCommentCubit>();
-                                final userId = await repository.extractUserId();
+                      // Get current user ID (in a real app, this would come from auth)
+                      final commentsCubit = context.read<CommentsCubit>();
 
-                                if (mounted && userId != null) {
-                                  addCommentCubit.addComment(
-                                    postId: widget.postId,
-                                    content: content,
-                                    userId: userId,
-                                  );
-                                }
-                              }
-                            },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.all(AppSpacing.xs),
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: isLoading
-                          ? const SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : Text(
-                              'Send',
-                              style: Theme.of(context).textTheme.bodyLarge
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                    );
+                      _commentController.clear();
+
+                      commentsCubit.tryAddComment(
+                        postId: widget.postId,
+                        content: content,
+                      );
+                    }
                   },
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.all(AppSpacing.xs),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Text(
+                    'Send',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ],
             ],

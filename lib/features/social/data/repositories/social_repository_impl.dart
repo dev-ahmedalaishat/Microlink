@@ -97,13 +97,12 @@ class SocialRepositoryImpl implements SocialRepository {
   Future<Comment> addComment({
     required String postId,
     required String content,
-    required String userId,
   }) async {
     try {
       return await _remoteDataSource.addComment(
         postId: postId,
         content: content,
-        userId: userId,
+        userId: 'b780223a-a88c-45da-bea9-70e44d9f2837',
       );
     } catch (e) {
       throw Exception('Failed to add comment: $e');
