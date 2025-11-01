@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:microlink/core/presentation/snackbar/custom_snackbar.dart';
 import 'package:microlink/core/theme/spacing.dart';
+import 'package:microlink/features/social/presentation/cubit/posts/posts_state.dart';
 import 'package:microlink/features/social/presentation/widgets/stories_section.dart';
 import '../../../../core/extensions/widget_extensions.dart';
 import '../../../../core/theme/color_palette.dart';
@@ -70,17 +72,41 @@ class _SocialMainPageState extends State<SocialMainPage>
             SliverToBoxAdapter(child: Divider(height: 10, thickness: 4)),
             // Create Post Widget as a sliver that scrolls away
             SliverToBoxAdapter(
-              child:
-                  CreatePostWidget(
-                        onPostCreated: () {
-                          context.read<PostsCubit>().refreshPosts();
+              child: BlocConsumer<PostCreationCubit, PostCreationState>(
+                listener: (context, state) {
+                  state.when(
+                    initial: () => {},
+                    loading: () => {context.showLoadingSnackBar('Posting...')},
+                    success: (posts) => {
+                      context.showSuccessSnackBar(
+                        'Post submitted – pending approval',
+                        onTap: () => {
+                          context.hideSnackBar(),
+                          _tabController.animateTo(1),
+                        },
+                      ),
+                      context.read<MyPostsCubit>().refreshMyPosts(),
+                      context.read<MyPostsCubit>().reset(),
+                    },
+                    error: (message) => {
+                      context.showErrorSnackBar('Post submission failed'),
+                      context.read<MyPostsCubit>().reset(),
+                    },
+                  );
+                },
+                builder: (context, state) {
+                  return CreatePostWidget(
+                        onPostClick: (params) {
+                          context.read<PostCreationCubit>().createPost(params);
                         },
                       )
                       .paddingSymmetric(
                         horizontal: AppSpacing.screenPadding,
                         // vertical: AppSpacing.md,
                       )
-                      .paddingOnly(top: AppSpacing.md),
+                      .paddingOnly(top: AppSpacing.md);
+                },
+              ),
             ),
             SliverToBoxAdapter(child: Divider(height: 1)),
             // Pinned Tab Bar

@@ -82,6 +82,7 @@ class PostCardNotApproved extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Post content
           Text(post.content, style: TextStyle(color: Colors.grey.shade600)),
@@ -92,8 +93,8 @@ class PostCardNotApproved extends StatelessWidget {
             _buildMediaSection(context),
           ],
         ],
-      ).opacity(0.6),
-    );
+      ).fullWidth().opacity(0.6),
+    ).fullWidth();
   }
 
   Widget _buildMediaSection(BuildContext context) {

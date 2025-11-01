@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../domain/entities/create_post_params.dart';
 import '../../../domain/repositories/social_repository.dart';
 import 'posts_state.dart';
 
@@ -101,10 +102,18 @@ class MyPostsCubit extends Cubit<MyPostsState> {
 
   MyPostsCubit(this._repository) : super(const MyPostsState.initial());
 
-  Future<void> loadMyPosts({int page = 1, int limit = 10}) async {
+  Future<void> loadMyPosts({
+    int page = 1,
+    int limit = 10,
+    bool forceRefresh = true,
+  }) async {
     try {
       emit(const MyPostsState.loading());
-      final posts = await _repository.getMyPosts(page: page, limit: limit);
+      final posts = await _repository.getMyPosts(
+        page: page,
+        limit: limit,
+        forceRefresh: forceRefresh,
+      );
       emit(MyPostsState.success(posts));
     } catch (e) {
       emit(MyPostsState.error(e.toString()));
@@ -112,7 +121,11 @@ class MyPostsCubit extends Cubit<MyPostsState> {
   }
 
   Future<void> refreshMyPosts() async {
-    await loadMyPosts();
+    await loadMyPosts(forceRefresh: false);
+  }
+
+  void reset() {
+    emit(const MyPostsState.initial());
   }
 }
 
@@ -122,18 +135,10 @@ class PostCreationCubit extends Cubit<PostCreationState> {
   PostCreationCubit(this._repository)
     : super(const PostCreationState.initial());
 
-  Future<void> createPost({
-    required String content,
-    required String userId,
-    List<String> mediaUrls = const [],
-  }) async {
+  Future<void> createPost(CreatePostParams params) async {
     try {
       emit(const PostCreationState.loading());
-      final post = await _repository.createPost(
-        content: content,
-        userId: userId,
-        mediaUrls: mediaUrls,
-      );
+      final post = await _repository.createPost(params);
       emit(PostCreationState.success(post));
     } catch (e) {
       emit(PostCreationState.error(e.toString()));

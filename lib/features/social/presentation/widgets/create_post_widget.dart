@@ -9,10 +9,12 @@ import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/core/theme/text_styles.dart';
 import 'dart:io';
 
-class CreatePostWidget extends StatefulWidget {
-  final VoidCallback? onPostCreated;
+import 'package:microlink/features/social/domain/entities/create_post_params.dart';
 
-  const CreatePostWidget({super.key, this.onPostCreated});
+class CreatePostWidget extends StatefulWidget {
+  final void Function(CreatePostParams params)? onPostClick;
+
+  const CreatePostWidget({super.key, this.onPostClick});
 
   @override
   State<CreatePostWidget> createState() => _CreatePostWidgetState();
@@ -82,18 +84,17 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
       return;
     }
 
-    // TODO: Implement actual post creation logic with cubit
-    // For now, just show a success message and clear the form
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Post created successfully!')));
+    widget.onPostClick?.call(
+      CreatePostParams(
+        content: _textController.text.trim(),
+        mediaUrls: _selectedImages.map((img) => img.path).toList(),
+      ),
+    );
 
     _textController.clear();
     setState(() {
       _selectedImages.clear();
     });
-
-    widget.onPostCreated?.call();
   }
 
   @override

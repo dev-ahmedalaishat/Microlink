@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:microlink/features/social/data/repositories/mock_social_repository.dart';
 
 // Core
 import 'core/network/api_client.dart';
@@ -27,7 +28,7 @@ Future<void> init() async {
 
   //! Repository (Real implementation)
   // Use SocialRepositoryImpl for real API calls
-  sl.registerLazySingleton<SocialRepository>(() => SocialRepositoryImpl(sl()));
+  sl.registerLazySingleton<SocialRepository>(() => MockSocialRepository());
 
   // Uncomment below to use mock implementation instead
   // sl.registerLazySingleton<SocialRepository>(

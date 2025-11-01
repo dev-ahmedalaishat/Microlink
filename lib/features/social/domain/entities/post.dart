@@ -3,11 +3,7 @@ import 'user.dart';
 
 part 'post.freezed.dart';
 
-enum PostStatus {
-  pending,
-  approved,
-  rejected,
-}
+enum PostStatus { pending, approved, rejected }
 
 @freezed
 class Post with _$Post {

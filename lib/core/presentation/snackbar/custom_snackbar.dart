@@ -194,6 +194,7 @@ extension SnackBarExtension on BuildContext {
         ).scale(2),
       ),
       onTap: onTap,
+      showCloseButton: true,
     ).show(this);
   }
 

@@ -1,3 +1,4 @@
+import '../../domain/entities/create_post_params.dart';
 import '../../domain/entities/post.dart';
 import '../../domain/entities/toggle_like_result.dart';
 import '../../domain/entities/user.dart';
@@ -159,7 +160,11 @@ class MockSocialRepository implements SocialRepository {
   }
 
   @override
-  Future<List<Post>> getMyPosts({int page = 1, int limit = 10}) async {
+  Future<List<Post>> getMyPosts({
+    int page = 1,
+    int limit = 10,
+    bool forceRefresh = false,
+  }) async {
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 600));
 
@@ -175,35 +180,32 @@ class MockSocialRepository implements SocialRepository {
   }
 
   @override
-  Future<Post> createPost({
-    required String content,
-    required String userId,
-    List<String> mediaUrls = const [],
-  }) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 1000));
+  Future<Post> createPost(CreatePostParams params) async {
+    // Simulate API call delay (network latency)
+    await Future.delayed(const Duration(milliseconds: 800));
 
-    // Find the user
-    final user = _mockUsers.firstWhere(
-      (u) => u.id == userId,
-      orElse: () => _mockUsers[0],
-    );
+    // Use first mock user as the post author (simulating authenticated user)
+    final user = _mockUsers[0];
 
-    // Create new post
+    // Create new post with PENDING status (matching API behavior)
+    // Posts created by users are pending approval from admin
     final newPost = Post(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      content: content,
+      content: params.content,
       author: user,
       createdAt: DateTime.now(),
-      status: PostStatus.pending, // New posts start as pending
-      mediaUrls: mediaUrls,
+      status:
+          PostStatus.pending, // PENDING_APPROVAL - waiting for admin approval
+      mediaUrls: params.mediaUrls, // Include all images from the request
       likesCount: 0,
       commentsCount: 0,
       isLiked: false,
     );
 
+    // Add to mock posts list (simulating database save)
     _mockPosts.add(newPost);
 
+    // Return the created post (matching API response)
     return newPost;
   }
 
