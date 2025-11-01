@@ -79,10 +79,10 @@ class _CommentsBottomSheetContentState
         BlocListener<AddCommentCubit, AddCommentState>(
           listener: (context, state) {
             state.maybeWhen(
-              success: () {
+              success: (newComment) {
                 _commentController.clear();
-                // Refresh comments after adding a new one
-                context.read<CommentsCubit>().refreshComments(widget.postId);
+                // Add the new comment to the list instead of refreshing
+                context.read<CommentsCubit>().addNewComment(newComment);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Comment added successfully')),
                 );

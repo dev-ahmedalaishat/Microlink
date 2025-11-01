@@ -306,7 +306,7 @@ class MockSocialRepository implements SocialRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> addComment({
+  Future<Comment> addComment({
     required String postId,
     required String content,
     required String userId,
@@ -314,15 +314,23 @@ class MockSocialRepository implements SocialRepository {
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 600));
 
-    return {
-      'success': true,
-      'comment': {
-        'id': DateTime.now().millisecondsSinceEpoch.toString(),
-        'content': content,
-        'author': {'name': 'You', 'id': userId},
-        'created_at': DateTime.now().toIso8601String(),
-      },
-    };
+    // Find the user who is adding the comment
+    final User author = _mockUsers.firstWhere(
+      (user) => user.id == userId,
+      orElse: () =>
+          const User(id: '1', name: 'You', unitDetails: 'Building 1, Unit 101'),
+    );
+
+    // Create new comment matching API response structure
+    final Comment newComment = Comment(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      postId: postId,
+      content: content,
+      author: author,
+      createdAt: DateTime.now(),
+    );
+
+    return newComment;
   }
 
   @override

@@ -19,7 +19,7 @@ abstract class SocialRepository {
 
   // Comments
   Future<List<Comment>> getComments(String postId);
-  Future<Map<String, dynamic>> addComment({
+  Future<Comment> addComment({
     required String postId,
     required String content,
     required String userId,

@@ -15,6 +15,7 @@ class CommentsState with _$CommentsState {
 class AddCommentState with _$AddCommentState {
   const factory AddCommentState.initial() = _AddCommentInitial;
   const factory AddCommentState.loading() = _AddCommentLoading;
-  const factory AddCommentState.success() = _AddCommentSuccess;
+  const factory AddCommentState.success(Comment newComment) =
+      _AddCommentSuccess;
   const factory AddCommentState.error(String message) = _AddCommentError;
 }

@@ -121,7 +121,7 @@ class SocialRemoteDataSource {
   }
 
   // Add a comment to a post
-  Future<Map<String, dynamic>> addComment({
+  Future<Comment> addComment({
     required String postId,
     required String content,
     required String userId,
@@ -131,7 +131,10 @@ class SocialRemoteDataSource {
       data: {'content': content, 'user_id': userId},
     );
 
-    return response.data;
+    final responseData = response.data;
+    return CommentModel.fromJson(
+      responseData as Map<String, dynamic>,
+    ).toDomain();
   }
 
   // Toggle like on a post

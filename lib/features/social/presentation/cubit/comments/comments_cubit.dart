@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../domain/entities/comment.dart';
 import '../../../domain/repositories/social_repository.dart';
 import 'comments_state.dart';
 
@@ -21,6 +22,17 @@ class CommentsCubit extends Cubit<CommentsState> {
     await loadComments(postId);
   }
 
+  void addNewComment(Comment newComment) {
+    state.maybeWhen(
+      success: (comments) {
+        // Add the new comment to the end of the list (most recent)
+        final updatedComments = [...comments, newComment];
+        emit(CommentsState.success(updatedComments));
+      },
+      orElse: () {},
+    );
+  }
+
   void reset() {
     emit(const CommentsState.initial());
   }
@@ -38,12 +50,12 @@ class AddCommentCubit extends Cubit<AddCommentState> {
   }) async {
     try {
       emit(const AddCommentState.loading());
-      await _repository.addComment(
+      final newComment = await _repository.addComment(
         postId: postId,
         content: content,
         userId: userId,
       );
-      emit(const AddCommentState.success());
+      emit(AddCommentState.success(newComment));
     } catch (e) {
       emit(AddCommentState.error(e.toString()));
     }

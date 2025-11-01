@@ -94,7 +94,7 @@ class SocialRepositoryImpl implements SocialRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> addComment({
+  Future<Comment> addComment({
     required String postId,
     required String content,
     required String userId,
