@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:microlink/core/extensions/widget_extensions.dart';
 import 'package:microlink/core/presentation/profile_avatar.dart';
+import 'package:microlink/core/presentation/shimmer/comments_shimmer.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/core/theme/text_styles.dart';
@@ -123,20 +124,23 @@ class _CommentsBottomSheetContentState
                     builder: (context, state) {
                       return state.when(
                         initial: () => const SizedBox.shrink(),
-                        loading: () => const Expanded(
-                          child: Center(child: CircularProgressIndicator()),
-                        ),
-                        success: (comments) => ListView.separated(
-                          controller: scrollController,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppSpacing.screenPadding,
-                            vertical: AppSpacing.md,
-                          ),
-                          itemCount: comments.length,
-                          separatorBuilder: (context, index) => SpacerV.l,
-                          itemBuilder: (context, index) {
-                            return _buildCommentItem(comments[index]);
-                          },
+                        loading: () => const CommentsShimmer().expanded(),
+                        success: (comments) => Column(
+                          children: [
+                            ListView.separated(
+                              controller: scrollController,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSpacing.screenPadding,
+                                vertical: AppSpacing.md,
+                              ),
+                              itemCount: comments.length,
+                              separatorBuilder: (context, index) => SpacerV.l,
+                              itemBuilder: (context, index) {
+                                return _buildCommentItem(comments[index]);
+                              },
+                            ).expanded(),
+                            _buildCommentInput(context),
+                          ],
                         ).expanded(),
                         error: (message) => Expanded(
                           child: Center(
@@ -160,7 +164,6 @@ class _CommentsBottomSheetContentState
                       );
                     },
                   ),
-                  _buildCommentInput(context),
                 ],
               ),
             );
@@ -205,12 +208,6 @@ class _CommentsBottomSheetContentState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(comment.author.name, style: AppTextStyles.userName),
-              SpacerV.xs,
-              if (comment.author.unitDetails != null)
-                Text(
-                  comment.author.unitDetails!,
-                  style: AppTextStyles.timestamp,
-                ),
               SpacerV.xs,
               Text(comment.createdAt.timeAgo(), style: AppTextStyles.timestamp),
               SpacerV.s,

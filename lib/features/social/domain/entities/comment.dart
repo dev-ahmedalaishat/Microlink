@@ -12,4 +12,7 @@ class Comment with _$Comment {
     required DateTime createdAt,
     required String postId,
   }) = _Comment;
+  const Comment._();
+
+  bool get isPending => id.startsWith('pending_');
 }
