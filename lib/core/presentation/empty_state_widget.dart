@@ -207,7 +207,9 @@ extension EmptyStateWidgetExt on EmptyStateWidget {
     return EmptyStateWidget(
       key: key,
       title: customTitle ?? 'Coming Soon',
-      description: customDescription ?? 'This feature is under development and will be available soon.',
+      description:
+          customDescription ??
+          'This feature is under development and will be available soon.',
       imagePath: imagePath,
       showDefaultIcon: imagePath == null,
     );
@@ -241,7 +243,7 @@ class ComingSoonWidget extends StatelessWidget {
             // Image or Icon
             _buildImageOrIcon(context),
             SpacerV.xl,
-            
+
             // Title
             Text(
               title ?? 'Coming Soon',
@@ -252,10 +254,11 @@ class ComingSoonWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             SpacerV.m,
-            
+
             // Description
             Text(
-              description ?? 'This feature is under development\nand will be available soon.',
+              description ??
+                  'This feature is under development\nand will be available soon.',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
                 height: 1.5,
@@ -263,7 +266,7 @@ class ComingSoonWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             SpacerV.xl,
-            
+
             // Decorative element
             _buildDecorativeElement(context),
           ],
@@ -279,7 +282,8 @@ class ComingSoonWidget extends StatelessWidget {
         width: imageSize,
         height: imageSize,
         fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) => _buildDefaultIcon(context),
+        errorBuilder: (context, error, stackTrace) =>
+            _buildDefaultIcon(context),
       );
     }
     return _buildDefaultIcon(context);

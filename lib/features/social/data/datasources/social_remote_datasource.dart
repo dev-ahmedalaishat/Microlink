@@ -1,6 +1,8 @@
 import 'package:microlink/features/social/data/models/post_model.dart';
 import 'package:microlink/features/social/data/models/create_post_request_model.dart';
 import 'package:microlink/features/social/data/models/comment_model.dart';
+import 'package:microlink/features/social/domain/entities/post.dart';
+import 'package:microlink/features/social/domain/repositories/social_repository.dart';
 import '../../domain/entities/comment.dart';
 
 import '../../../../../../core/network/api_client.dart';
@@ -61,42 +63,16 @@ class SocialRemoteDataSource {
   }
 
   // Create a new post
-  Future<PostModel> createPost(CreatePostRequestModel request) async {
-    // TODO: Uncomment when API is ready
-    // final response = await _apiClient.post('/posts', data: request.toJson());
-    // final responseData = response.data;
-    // final Map<String, dynamic> postData;
-    // if (responseData is Map<String, dynamic>) {
-    //   postData = responseData['post'] ?? responseData['data'] ?? responseData;
-    // } else {
-    //   throw Exception('Invalid response format');
-    // }
-    // return PostModel.fromJson(postData);
-
-    // MOCK: Simulate API call delay
-    await Future.delayed(const Duration(milliseconds: 800));
-
-    // MOCK: Simulate API response with PENDING status
-    final mockResponse = {
-      'post_id': DateTime.now().millisecondsSinceEpoch.toString(),
-      'content': request.content,
-      'media_urls': request.mediaUrls,
-      'status': 'PENDING',
-      'like_count': 0,
-      'comment_count': 0,
-      'is_liked': false,
-      'created_at': DateTime.now().toIso8601String(),
-      'user': {
-        'user_id': request.userId,
-        'username': 'Mock User',
-        'avatar_url':
-            'https://ui-avatars.com/api/?name=Mock+User&background=008080&color=fff',
-        'unit_details': 'Building A, Unit 101',
-        'is_verified': false,
-      },
-    };
-
-    return PostModel.fromJson(mockResponse);
+  Future<Post> createPost(CreatePostRequestModel request) async {
+    final response = await _apiClient.post('/posts', data: request.toJson());
+    final responseData = response.data;
+    final Map<String, dynamic> postData;
+    if (responseData is Map<String, dynamic>) {
+      postData = responseData['post'] ?? responseData['data'] ?? responseData;
+    } else {
+      throw Exception('Invalid response format');
+    }
+    return PostModel.fromJson(postData).toDomain(loggedUserId);
   }
 
   // Get comments for a post
@@ -116,7 +92,7 @@ class SocialRemoteDataSource {
 
     return data
         .map((json) => CommentModel.fromJson(json as Map<String, dynamic>))
-        .map((model) => model.toDomain())
+        .map((model) => model.toDomain(loggedUserId))
         .toList();
   }
 
@@ -134,7 +110,7 @@ class SocialRemoteDataSource {
     final responseData = response.data;
     return CommentModel.fromJson(
       responseData as Map<String, dynamic>,
-    ).toDomain();
+    ).toDomain(loggedUserId);
   }
 
   // Toggle like on a post

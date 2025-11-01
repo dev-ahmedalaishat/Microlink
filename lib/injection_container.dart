@@ -29,7 +29,7 @@ Future<void> init() async {
 
   //! Repository (Real implementation)
   // Use SocialRepositoryImpl for real API calls
-  sl.registerLazySingleton<SocialRepository>(() => MockSocialRepository());
+  sl.registerLazySingleton<SocialRepository>(() => SocialRepositoryImpl(sl()));
 
   // Uncomment below to use mock implementation instead
   // sl.registerLazySingleton<SocialRepository>(

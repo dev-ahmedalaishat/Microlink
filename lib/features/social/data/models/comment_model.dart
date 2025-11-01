@@ -42,13 +42,13 @@ class CommentsResponse with _$CommentsResponse {
 }
 
 extension CommentModelX on CommentModel {
-  Comment toDomain() {
+  Comment toDomain(String loggedUserId) {
     return Comment(
       id: id,
       content: content,
       author: User(
         id: user.id,
-        name: user.username,
+        name: loggedUserId == user.id ? 'You' : user.username,
         unitDetails: user.unitDetails,
       ),
       createdAt: DateTime.parse(createdAt),

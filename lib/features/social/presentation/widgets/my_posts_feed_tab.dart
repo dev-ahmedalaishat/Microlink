@@ -64,7 +64,7 @@ class _MyPostsSuccess extends StatelessWidget {
 
     return RefreshIndicator.adaptive(
       onRefresh: () async {
-        context.read<MyPostsCubit>().refreshMyPosts();
+        context.read<MyPostsCubit>().refreshMyPosts(forceRefresh: true);
       },
       child: ListView.separated(
         itemCount: posts.length + 1,

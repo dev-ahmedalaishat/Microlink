@@ -26,7 +26,7 @@ class SocialRepositoryImpl implements SocialRepository {
         page: page,
         limit: limit,
       );
-      return postModels.map((model) => model.toEntity()).toList();
+      return postModels.map((model) => model.toDomain(loggedUserId)).toList();
     } catch (e) {
       throw Exception('Failed to load latest posts: $e');
     }
@@ -46,11 +46,13 @@ class SocialRepositoryImpl implements SocialRepository {
 
       // Fetch from remote
       final postModels = await _remoteDataSource.getMyPosts(
-        userId: 'b780223a-a88c-45da-bea9-70e44d9f2837',
+        userId: loggedUserId,
         page: page,
         limit: limit,
       );
-      final posts = postModels.map((model) => model.toEntity()).toList();
+      final posts = postModels
+          .map((model) => model.toDomain(loggedUserId))
+          .toList();
 
       // Cache the posts
       _cachedMyPosts = posts;
@@ -64,14 +66,11 @@ class SocialRepositoryImpl implements SocialRepository {
   @override
   Future<Post> createPost(CreatePostParams params) async {
     try {
-      final userId = 'b780223a-a88c-45da-bea9-70e44d9f2837';
-
       // Create request model
-      final request = CreatePostRequestModel.fromEntity(params, userId);
+      final request = CreatePostRequestModel.fromEntity(params, loggedUserId);
 
       // Call API with request model
-      final postModel = await _remoteDataSource.createPost(request);
-      final newPost = postModel.toEntity();
+      final newPost = await _remoteDataSource.createPost(request);
 
       // Add to cached posts (prepend to the beginning)
       if (_cachedMyPosts != null) {
@@ -102,7 +101,7 @@ class SocialRepositoryImpl implements SocialRepository {
       return await _remoteDataSource.addComment(
         postId: postId,
         content: content,
-        userId: 'b780223a-a88c-45da-bea9-70e44d9f2837',
+        userId: loggedUserId,
       );
     } catch (e) {
       throw Exception('Failed to add comment: $e');
@@ -114,7 +113,7 @@ class SocialRepositoryImpl implements SocialRepository {
     try {
       final response = await _remoteDataSource.toggleLike(
         postId: postId,
-        userId: 'b780223a-a88c-45da-bea9-70e44d9f2837',
+        userId: loggedUserId,
       );
       return ToggleLikeResult(
         isLiked: response['action'] as String == 'liked',

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:microlink/core/presentation/wrapper/app_svg_picture.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
@@ -107,7 +109,60 @@ class PostCardNotApproved extends StatelessWidget {
       separatorBuilder: (context, index) => SpacerH.xs,
       padding: EdgeInsetsGeometry.zero,
       itemBuilder: (context, index) {
-        return const Icon(Icons.image, size: 50, color: Colors.grey)
+        final mediaUrl = post.mediaUrls[index];
+
+        // Check if it's a network URL
+        if (mediaUrl.startsWith('http://') || mediaUrl.startsWith('https://')) {
+          return Image.network(
+                mediaUrl,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(
+                    Icons.image,
+                    size: 50,
+                    color: Colors.grey,
+                  ).center();
+                },
+              )
+              .sized(width: imageWidth, height: imageHeight)
+              .backgroundWithBorderRadius(
+                Colors.grey.shade200,
+                BorderRadius.all(Radius.circular(AppSpacing.postImageRadius)),
+              );
+        }
+
+        // Check if it's a file path
+        try {
+          final file = File(mediaUrl);
+          if (file.existsSync()) {
+            return Image.file(
+                  file,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(
+                      Icons.image,
+                      size: 50,
+                      color: Colors.grey,
+                    ).center();
+                  },
+                )
+                .sized(width: imageWidth, height: imageHeight)
+                .backgroundWithBorderRadius(
+                  Colors.grey.shade200,
+                  BorderRadius.all(Radius.circular(AppSpacing.postImageRadius)),
+                );
+          }
+        } catch (e) {
+          // If file check fails, fall through to show icon
+        }
+
+        // Default: show image icon
+        return Icon(Icons.image, size: 50, color: Colors.grey)
+            .center()
             .sized(width: imageWidth, height: imageHeight)
             .backgroundWithBorderRadius(
               Colors.grey.shade200,

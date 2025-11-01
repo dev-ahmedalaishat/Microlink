@@ -120,8 +120,8 @@ class MyPostsCubit extends Cubit<MyPostsState> {
     }
   }
 
-  Future<void> refreshMyPosts() async {
-    await loadMyPosts(forceRefresh: false);
+  Future<void> refreshMyPosts({bool forceRefresh = true}) async {
+    await loadMyPosts(forceRefresh: forceRefresh);
   }
 
   void reset() {

@@ -24,10 +24,10 @@ class PostModel with _$PostModel {
 }
 
 extension PostModelX on PostModel {
-  Post toEntity() => Post(
+  Post toDomain(String loggedUserId) => Post(
     id: id,
     content: content,
-    author: author.toEntity(),
+    author: author.toDomain(loggedUserId),
     createdAt: DateTime.parse(createdAt),
     status: _parsePostStatus(status),
     mediaUrls: mediaUrls,

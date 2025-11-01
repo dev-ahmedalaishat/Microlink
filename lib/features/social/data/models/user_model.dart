@@ -19,9 +19,9 @@ class UserModel with _$UserModel {
 }
 
 extension UserModelX on UserModel {
-  User toEntity() => User(
+  User toDomain(String loggedUserId) => User(
     id: id,
-    name: name,
+    name: loggedUserId == id ? 'You' : name,
     avatarUrl: avatarUrl,
     unitDetails: unitDetails,
     isVerified: isVerified,

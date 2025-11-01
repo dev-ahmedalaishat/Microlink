@@ -3,6 +3,8 @@ import '../entities/post.dart';
 import '../entities/toggle_like_result.dart';
 import '../entities/comment.dart';
 
+final loggedUserId = 'b780223a-a88c-45da-bea9-70e44d9f2837';
+
 abstract class SocialRepository {
   // Posts
   Future<List<Post>> getLatestPosts({
@@ -19,10 +21,7 @@ abstract class SocialRepository {
 
   // Comments
   Future<List<Comment>> getComments(String postId);
-  Future<Comment> addComment({
-    required String postId,
-    required String content,
-  });
+  Future<Comment> addComment({required String postId, required String content});
 
   // Interactions
   Future<ToggleLikeResult> toggleLike({required String postId});
