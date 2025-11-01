@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:microlink/core/extensions/widget_extensions.dart';
+import 'package:microlink/core/presentation/shimmer/posts_shimmer.dart';
 import 'package:microlink/core/presentation/snackbar/custom_snackbar.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -19,7 +20,7 @@ class LatestFeedTab extends StatelessWidget {
       builder: (context, state) {
         return state.when(
           initial: () => const Center(child: Text('Welcome to Social Feed')),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const PostsShimmer(),
           success: (posts) => _LatestFeedSuccess(
             posts: posts,
             onPostSubmitted: onPostSubmitted,

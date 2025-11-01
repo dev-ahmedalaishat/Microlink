@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:microlink/core/presentation/shimmer/posts_shimmer.dart';
 import 'package:microlink/features/social/presentation/widgets/post_card_approved.dart';
 import 'package:microlink/features/social/presentation/widgets/post_card_not_approved.dart';
 import '../../domain/entities/post.dart';
@@ -15,7 +16,7 @@ class MyPostsFeedTab extends StatelessWidget {
       builder: (context, state) {
         return state.when(
           initial: () => const _MyPostsInitial(),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const PostsShimmer(),
           success: (posts) => _MyPostsSuccess(posts: posts),
           error: (message) => _MyPostsError(message: message),
         );
