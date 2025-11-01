@@ -18,6 +18,7 @@ class SocialRemoteDataSource {
       '/posts/latest',
       queryParameters: {'page': page, 'limit': limit},
     );
+    await Future.delayed(const Duration(milliseconds: 500));
 
     final responseData = response.data;
     final List<dynamic> data;
@@ -45,6 +46,7 @@ class SocialRemoteDataSource {
       '/posts/my',
       queryParameters: {'user_id': userId, 'page': page, 'limit': limit},
     );
+    await Future.delayed(const Duration(milliseconds: 500));
 
     final responseData = response.data;
     final List<dynamic> data;
@@ -65,6 +67,7 @@ class SocialRemoteDataSource {
   // Create a new post
   Future<Post> createPost(CreatePostRequestModel request) async {
     final response = await _apiClient.post('/posts', data: request.toJson());
+    await Future.delayed(const Duration(milliseconds: 500));
     final responseData = response.data;
     final Map<String, dynamic> postData;
     if (responseData is Map<String, dynamic>) {
@@ -78,6 +81,7 @@ class SocialRemoteDataSource {
   // Get comments for a post
   Future<List<Comment>> getComments(String postId) async {
     final response = await _apiClient.get('/posts/$postId/comments');
+    await Future.delayed(const Duration(milliseconds: 500));
 
     final responseData = response.data;
     final List<dynamic> data;
@@ -106,7 +110,7 @@ class SocialRemoteDataSource {
       '/posts/$postId/comments',
       data: {'content': content, 'user_id': userId},
     );
-
+    await Future.delayed(const Duration(milliseconds: 500));
     final responseData = response.data;
     return CommentModel.fromJson(
       responseData as Map<String, dynamic>,

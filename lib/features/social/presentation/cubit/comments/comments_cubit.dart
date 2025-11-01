@@ -114,7 +114,7 @@ class CommentsCubit extends Cubit<CommentsState> {
     return Comment(
       id: pendingId,
       content: content,
-      author: const User(id: 'temp', name: 'You'),
+      author: User(id: loggedUserId, name: 'You'),
       createdAt: DateTime.now(),
       postId: postId,
     );
