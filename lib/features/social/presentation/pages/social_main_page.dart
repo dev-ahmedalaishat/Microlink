@@ -58,6 +58,7 @@ class _SocialMainPageState extends State<SocialMainPage>
         surfaceTintColor: Colors.transparent,
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.surface,
+        title: const StaticTopBarProfiles(),
         actions: [
           IconButton(icon: const Icon(Icons.notifications), onPressed: () {}),
         ],
@@ -250,5 +251,118 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
     return false;
+  }
+}
+
+// Static Top Bar Profiles Widget
+class StaticTopBarProfiles extends StatelessWidget {
+  const StaticTopBarProfiles({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 145,
+      height: 32,
+      child: Stack(
+        children: [
+          // First Avatar with 'A'
+          Positioned(
+            left: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.surface,
+                  width: 2,
+                ),
+              ),
+              child: CircleAvatar(
+                radius: 14,
+                backgroundColor: Color(0xFF5B7FE5),
+                child: Text(
+                  'A',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Second Avatar with profile image (overlapping)
+          Positioned(
+            left: 22,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.surface,
+                  width: 2,
+                ),
+              ),
+              child: CircleAvatar(
+                radius: 14,
+                backgroundImage: AssetImage('assets/images/img_tsc.png'),
+              ),
+            ),
+          ),
+          // Add button (overlapping)
+          Positioned(
+            left: 44,
+            child: Container(
+              height: 32,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.surface,
+                  width: 2,
+                ),
+                gradient: LinearGradient(
+                  colors: [Color(0xFFFF375F), Color(0xFFFF375F)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    // Handle add action
+                  },
+                  borderRadius: BorderRadius.circular(16),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 16,
+                      right: 6,
+                      top: 4,
+                      bottom: 4,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Add',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(Icons.add, color: Colors.white, size: 12)
+                            .paddingAll(4)
+                            .background(Color(0xFF787880).withAlpha(82))
+                            .radiusXL(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
