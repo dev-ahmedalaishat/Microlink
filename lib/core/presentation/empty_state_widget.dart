@@ -196,4 +196,126 @@ extension EmptyStateWidgetExt on EmptyStateWidget {
       showDefaultIcon: false,
     );
   }
+
+  /// Creates a coming soon widget
+  static EmptyStateWidget comingSoon({
+    Key? key,
+    String? customTitle,
+    String? customDescription,
+    String? imagePath,
+  }) {
+    return EmptyStateWidget(
+      key: key,
+      title: customTitle ?? 'Coming Soon',
+      description: customDescription ?? 'This feature is under development and will be available soon.',
+      imagePath: imagePath,
+      showDefaultIcon: imagePath == null,
+    );
+  }
+}
+
+/// Standalone Coming Soon Widget with custom styling
+class ComingSoonWidget extends StatelessWidget {
+  final String? title;
+  final String? description;
+  final String? imagePath;
+  final double? imageSize;
+
+  const ComingSoonWidget({
+    super.key,
+    this.title,
+    this.description,
+    this.imagePath,
+    this.imageSize = 200.0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Image or Icon
+            _buildImageOrIcon(context),
+            SpacerV.xl,
+            
+            // Title
+            Text(
+              title ?? 'Coming Soon',
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SpacerV.m,
+            
+            // Description
+            Text(
+              description ?? 'This feature is under development\nand will be available soon.',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SpacerV.xl,
+            
+            // Decorative element
+            _buildDecorativeElement(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImageOrIcon(BuildContext context) {
+    if (imagePath != null && imagePath!.isNotEmpty) {
+      return Image.asset(
+        imagePath!,
+        width: imageSize,
+        height: imageSize,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) => _buildDefaultIcon(context),
+      );
+    }
+    return _buildDefaultIcon(context);
+  }
+
+  Widget _buildDefaultIcon(BuildContext context) {
+    return Container(
+      width: imageSize ?? 200.0,
+      height: imageSize ?? 200.0,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primaryContainer.withAlpha(51),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        Icons.rocket_launch_rounded,
+        size: (imageSize ?? 200.0) * 0.5,
+        color: Theme.of(context).colorScheme.primary,
+      ),
+    );
+  }
+
+  Widget _buildDecorativeElement(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        3,
+        (index) => Container(
+          margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary.withAlpha(128),
+            shape: BoxShape.circle,
+          ),
+        ),
+      ),
+    );
+  }
 }

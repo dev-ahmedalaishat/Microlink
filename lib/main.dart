@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:microlink/core/router/app_router_v2.dart';
+import 'package:provider/provider.dart';
 
 // Core
 import 'core/theme/app_theme.dart';
-import 'core/router/app_router.dart';
 import 'injection_container.dart' as di;
+
+// Domain
+import 'features/social/domain/repositories/social_repository.dart';
 
 // Features
 import 'features/social/presentation/cubit/posts/posts_cubit.dart';
-import 'features/social/domain/repositories/social_repository.dart';
+import 'features/social/presentation/cubit/comments/comments_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,21 +28,22 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiProvider(
       providers: [
+        // Repository providers
+        Provider<SocialRepository>(create: (_) => di.sl<SocialRepository>()),
+        // Bloc providers
         BlocProvider(create: (_) => di.sl<PostsCubit>()),
         BlocProvider(create: (_) => di.sl<MyPostsCubit>()),
         BlocProvider(create: (_) => di.sl<PostCreationCubit>()),
-        // Provide SocialRepository for other widgets to use
-        RepositoryProvider<SocialRepository>(
-          create: (_) => di.sl<SocialRepository>(),
-        ),
+        BlocProvider(create: (_) => di.sl<CommentsCubit>()),
       ],
-      child: MaterialApp.router(
+      child: MaterialApp(
         title: 'MicroLink',
         theme: AppTheme.lightTheme,
         debugShowCheckedModeBanner: false,
-        routerConfig: AppRouter.router,
+        // routerConfig: AppRouter.router,
+        home: AppRouterV2(),
       ),
     );
   }

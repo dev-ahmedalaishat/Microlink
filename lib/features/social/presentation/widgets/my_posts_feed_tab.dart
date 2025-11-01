@@ -71,10 +71,10 @@ class _MyPostsSuccess extends StatelessWidget {
         separatorBuilder: (context, index) => const Divider(height: 1),
         itemBuilder: (context, index) {
           if (index == posts.length) {
-            return Text(
+            return const Text(
               "That's all",
               style: TextStyle(color: Colors.grey, fontSize: 16),
-            ).center().paddingAll(AppSpacing.lg);
+            ).center().paddingAll(32).paddingOnly(bottom: 70);
           }
 
           final post = posts[index];

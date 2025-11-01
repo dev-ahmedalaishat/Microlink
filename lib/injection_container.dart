@@ -14,6 +14,7 @@ import 'features/social/domain/repositories/social_repository.dart';
 
 // Presentation
 import 'features/social/presentation/cubit/posts/posts_cubit.dart';
+import 'features/social/presentation/cubit/comments/comments_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -39,4 +40,5 @@ Future<void> init() async {
   sl.registerFactory(() => PostsCubit(sl()));
   sl.registerFactory(() => MyPostsCubit(sl())..loadMyPosts());
   sl.registerFactory(() => PostCreationCubit(sl()));
+  sl.registerFactory(() => CommentsCubit(sl()));
 }

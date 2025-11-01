@@ -159,9 +159,9 @@ class _SocialMainPageState extends State<SocialMainPage>
       ),
 
       // Bottom Navigation with FAB
-      bottomNavigationBar: _buildBottomNavigation(),
-      floatingActionButton: _buildFloatingActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      // bottomNavigationBar: _buildBottomNavigation(),
+      // floatingActionButton: _buildFloatingActionButton(),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 

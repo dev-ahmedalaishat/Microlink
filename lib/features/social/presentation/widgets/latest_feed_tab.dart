@@ -58,15 +58,10 @@ class _LatestFeedSuccess extends StatelessWidget {
             const Divider(height: 1).screenPadding(),
         itemBuilder: (context, index) {
           if (index == posts.length) {
-            return const Padding(
-              padding: EdgeInsets.all(32.0),
-              child: Center(
-                child: Text(
-                  "That's all",
-                  style: TextStyle(color: Colors.grey, fontSize: 16),
-                ),
-              ),
-            );
+            return const Text(
+              "That's all",
+              style: TextStyle(color: Colors.grey, fontSize: 16),
+            ).center().paddingAll(32).paddingOnly(bottom: 70);
           }
 
           final post = posts[index];

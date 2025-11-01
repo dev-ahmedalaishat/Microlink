@@ -9,8 +9,8 @@ import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/core/theme/text_styles.dart';
 import 'package:microlink/core/extensions/date_extensions.dart';
+import '../../../../injection_container.dart' as di;
 import '../../domain/entities/comment.dart' as domain;
-import '../../domain/repositories/social_repository.dart';
 import '../cubit/comments/comments_cubit.dart';
 import '../cubit/comments/comments_state.dart';
 
@@ -24,9 +24,7 @@ class CommentsBottomSheet extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<CommentsCubit>(
-          create: (context) =>
-              CommentsCubit(context.read<SocialRepository>())
-                ..loadComments(postId),
+          create: (context) => di.sl<CommentsCubit>()..loadComments(postId),
         ),
       ],
       child: CommentsBottomSheetContent(postId: postId),
