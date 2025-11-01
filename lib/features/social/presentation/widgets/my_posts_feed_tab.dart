@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:microlink/core/extensions/widget_extensions.dart';
+import 'package:microlink/core/presentation/empty_state_widget.dart';
 import 'package:microlink/core/presentation/shimmer/posts_shimmer.dart';
+import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/features/social/presentation/widgets/post_card_approved.dart';
 import 'package:microlink/features/social/presentation/widgets/post_card_not_approved.dart';
 import '../../domain/entities/post.dart';
@@ -56,7 +59,7 @@ class _MyPostsSuccess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (posts.isEmpty) {
-      return const Center(child: Text('No posts yet'));
+      return _MyPostsEmpty();
     }
 
     return RefreshIndicator.adaptive(
@@ -68,15 +71,10 @@ class _MyPostsSuccess extends StatelessWidget {
         separatorBuilder: (context, index) => const Divider(height: 1),
         itemBuilder: (context, index) {
           if (index == posts.length) {
-            return const Padding(
-              padding: EdgeInsets.all(32.0),
-              child: Center(
-                child: Text(
-                  "That's all",
-                  style: TextStyle(color: Colors.grey, fontSize: 16),
-                ),
-              ),
-            );
+            return Text(
+              "That's all",
+              style: TextStyle(color: Colors.grey, fontSize: 16),
+            ).center().paddingAll(AppSpacing.lg);
           }
 
           final post = posts[index];
@@ -98,17 +96,23 @@ class _MyPostsError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Error: $message'),
-          ElevatedButton(
-            onPressed: () => context.read<MyPostsCubit>().loadMyPosts(),
-            child: const Text('Retry'),
-          ),
-        ],
-      ),
-    );
+    return EmptyStateWidgetExt.empty(
+      // customTitle: 'Error Loading Posts',
+      customDescription: 'Failed to load posts. Please try again.',
+      imagePath: 'assets/images/ill_no_posts.png',
+      onActionButtonPressed: () {
+        context.read<PostsCubit>().refreshPosts();
+      },
+    ).center();
+  }
+}
+
+class _MyPostsEmpty extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return EmptyStateWidgetExt.empty(
+      customDescription: 'You have not created any posts yet.',
+      imagePath: 'assets/images/ill_no_posts.png',
+    ).center();
   }
 }

@@ -253,6 +253,8 @@ class MockSocialRepository implements SocialRepository {
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 400));
 
+    return [];
+
     // Generate mock comments for any post
     final List<Comment> mockComments = [
       Comment(

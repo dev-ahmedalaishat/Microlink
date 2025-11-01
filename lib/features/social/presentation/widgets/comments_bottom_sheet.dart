@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:microlink/core/extensions/widget_extensions.dart';
+import 'package:microlink/core/presentation/empty_state_widget.dart';
 import 'package:microlink/core/presentation/profile_avatar.dart';
 import 'package:microlink/core/presentation/shimmer/comments_shimmer.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
@@ -84,6 +85,32 @@ class _CommentsBottomSheetContentState
     });
   }
 
+  Widget _buildCommentsContent(List<domain.Comment> comments) {
+    if (comments.isEmpty) {
+      return Column(
+        children: [_CommentsEmpty().expanded(), _buildCommentInput(context)],
+      ).expanded();
+    }
+
+    return Column(
+      children: [
+        ListView.separated(
+          controller: _scrollController,
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSpacing.screenPadding,
+            vertical: AppSpacing.md,
+          ),
+          itemCount: comments.length,
+          separatorBuilder: (context, index) => SpacerV.l,
+          itemBuilder: (context, index) {
+            return _buildCommentItem(comments[index]);
+          },
+        ).expanded(),
+        _buildCommentInput(context),
+      ],
+    ).expanded();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -113,23 +140,7 @@ class _CommentsBottomSheetContentState
                     return state.when(
                       initial: () => const SizedBox.shrink(),
                       loading: () => const CommentsShimmer().expanded(),
-                      success: (comments) => Column(
-                        children: [
-                          ListView.separated(
-                            controller: _scrollController,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: AppSpacing.screenPadding,
-                              vertical: AppSpacing.md,
-                            ),
-                            itemCount: comments.length,
-                            separatorBuilder: (context, index) => SpacerV.l,
-                            itemBuilder: (context, index) {
-                              return _buildCommentItem(comments[index]);
-                            },
-                          ).expanded(),
-                          _buildCommentInput(context),
-                        ],
-                      ).expanded(),
+                      success: (comments) => _buildCommentsContent(comments),
                       error: (message) => Expanded(
                         child: Center(
                           child: Column(
@@ -307,5 +318,15 @@ class _CommentsBottomSheetContentState
         ).expanded(),
       ],
     ).fullWidth().screenPadding();
+  }
+}
+
+class _CommentsEmpty extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return EmptyStateWidgetExt.empty(
+      customDescription: 'No comments yet. Be the first to comment!',
+      imagePath: 'assets/images/ill_no_comments.png',
+    ).center();
   }
 }
