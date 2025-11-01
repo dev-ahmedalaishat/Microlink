@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:microlink/core/constants/app_constants.dart';
 import 'package:microlink/core/presentation/snackbar/custom_snackbar.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/features/social/presentation/cubit/posts/posts_state.dart';
@@ -44,8 +46,14 @@ class _SocialMainPageState extends State<SocialMainPage>
       appBar: AppBar(
         // title: const Text('Social Feed'),
         leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () => context.go('/'),
+          icon: SvgPicture.asset(
+            'assets/icons/ic_menu.svg',
+            colorFilter: ColorFilter.mode(
+              Theme.of(context).colorScheme.onSurface,
+              BlendMode.srcIn,
+            ),
+          ),
+          onPressed: () => {},
         ),
         surfaceTintColor: Colors.transparent,
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -61,11 +69,18 @@ class _SocialMainPageState extends State<SocialMainPage>
               child: StoriesSection(
                 stories: [
                   // Dummy stories for illustration
-                  StoryItem(label: 'Your Story', imageUrl: ''),
-                  StoryItem(label: "Alice", imageUrl: ''),
-                  StoryItem(label: "Alice", imageUrl: ''),
-                  StoryItem(label: "Alice", imageUrl: ''),
-                  StoryItem(label: "Alice", imageUrl: ''),
+                  StoryItem(
+                    label: "TSC",
+                    imageUrl: 'assets/images/img_tsc.png',
+                  ),
+                  StoryItem(
+                    label: "Micropolis",
+                    imageUrl: 'assets/images/img_micropolis.png',
+                  ),
+                  StoryItem(
+                    label: "Garden",
+                    imageUrl: 'assets/images/img_garden.png',
+                  ),
                 ],
               ).paddingOnly(top: AppSpacing.md),
             ),

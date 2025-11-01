@@ -10,18 +10,22 @@ class StoryAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final content = imageUrl != null && imageUrl!.isNotEmpty
-        ? CachedNetworkImage(
-            imageUrl: imageUrl!,
-            fit: BoxFit.cover,
-            placeholder: (context, url) =>
-                const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-            errorWidget: (context, url, error) => Image.asset(
-              'assets/images/img_micropolis.png',
-              fit: BoxFit.cover,
-            ),
-          )
-        : Image.asset('assets/images/img_micropolis.png', fit: BoxFit.cover);
+    final content = Image.asset(
+      imageUrl ?? 'assets/images/img_micropolis.png',
+      fit: BoxFit.cover,
+    );
+    // final content = imageUrl != null && imageUrl!.isNotEmpty
+    //     ? CachedNetworkImage(
+    //         imageUrl: imageUrl!,
+    //         fit: BoxFit.cover,
+    //         placeholder: (context, url) =>
+    //             const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+    //         errorWidget: (context, url, error) => Image.asset(
+    //           'assets/images/img_micropolis.png',
+    //           fit: BoxFit.cover,
+    //         ),
+    //       )
+    //     : Image.asset('assets/images/img_micropolis.png', fit: BoxFit.cover);
 
     final avatar = Container(
       width: size,

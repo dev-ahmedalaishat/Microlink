@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:microlink/core/presentation/profile_avatar.dart';
+import 'package:microlink/features/social/domain/repositories/social_repository.dart';
 import '../../../../core/presentation/spacing_widgets.dart';
 import '../../../../core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
@@ -37,7 +38,9 @@ class AddStoryWidget extends StatelessWidget {
                           )
                         : null,
                   ),
-                  child: userImageUrl == null ? ProfileAvatar() : null,
+                  child: userImageUrl == null
+                      ? ProfileAvatar(userId: loggedUserId)
+                      : null,
                 ),
                 // Add button
                 Positioned(

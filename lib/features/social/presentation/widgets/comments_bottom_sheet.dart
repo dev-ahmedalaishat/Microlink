@@ -9,6 +9,7 @@ import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/core/theme/text_styles.dart';
 import 'package:microlink/core/extensions/date_extensions.dart';
+import 'package:microlink/features/social/domain/repositories/social_repository.dart';
 import '../../../../injection_container.dart' as di;
 import '../../domain/entities/comment.dart' as domain;
 import '../cubit/comments/comments_cubit.dart';
@@ -197,7 +198,10 @@ class _CommentsBottomSheetContentState
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ProfileAvatar(imageUrl: comment.author.avatarUrl ?? ''),
+        ProfileAvatar(
+          imageUrl: comment.author.avatarUrl ?? '',
+          userId: comment.author.id,
+        ),
         SpacerH.s,
         Expanded(
           child: Column(
@@ -244,7 +248,10 @@ class _CommentsBottomSheetContentState
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        ProfileAvatar(imageUrl: '').paddingOnly(bottom: AppSpacing.md),
+        ProfileAvatar(
+          imageUrl: '',
+          userId: loggedUserId,
+        ).paddingOnly(bottom: AppSpacing.md),
         SpacerH.s,
         Container(
           margin: EdgeInsets.symmetric(vertical: AppSpacing.md),

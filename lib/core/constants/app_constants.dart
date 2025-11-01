@@ -77,4 +77,23 @@ class AppConstants {
   /// File size limits
   static const int maxFileSizeBytes = 5 * 1024 * 1024; // 5MB in bytes
   static const double maxFileSizeMB = 5.0;
+
+  static List<String> avatars = [
+    'assets/images/img_micropolis.png',
+    'assets/images/img_tsc.png',
+    // 'assets/images/img_garden.png',
+  ];
+
+  static final Map<String, String> avatarMap = {};
+
+  static String getRandomAvatar(String userId) {
+    if (avatarMap.containsKey(userId)) {
+      return avatarMap[userId]!;
+    }
+
+    final shuffled = List<String>.from(avatars)..shuffle();
+    final avatar = shuffled.first;
+    avatarMap[userId] = avatar;
+    return avatar;
+  }
 }

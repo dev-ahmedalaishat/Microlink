@@ -10,6 +10,7 @@ import 'package:microlink/core/theme/text_styles.dart';
 import 'dart:io';
 
 import 'package:microlink/features/social/domain/entities/create_post_params.dart';
+import 'package:microlink/features/social/domain/repositories/social_repository.dart';
 
 class CreatePostWidget extends StatefulWidget {
   final void Function(CreatePostParams params)? onPostClick;
@@ -102,7 +103,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ProfileAvatar(imageUrl: ''),
+        ProfileAvatar(imageUrl: '', userId: loggedUserId),
         Column(
           children: [
             _buildInlineContent(context),

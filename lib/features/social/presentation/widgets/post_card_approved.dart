@@ -6,6 +6,7 @@ import 'package:microlink/core/presentation/profile_avatar.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/presentation/story_avatar.dart';
 import 'package:microlink/core/theme/spacing.dart';
+import 'package:microlink/features/social/domain/repositories/social_repository.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/extensions/widget_extensions.dart';
 import '../../domain/entities/post.dart';
@@ -124,7 +125,10 @@ class _PostCardApprovedState extends State<PostCardApproved>
   Widget _buildPostHeader() {
     return Row(
       children: [
-        if (widget.isMyPost) ProfileAvatar() else StoryAvatar(),
+        if (widget.isMyPost)
+          ProfileAvatar(userId: loggedUserId)
+        else
+          StoryAvatar(),
         SpacerH.s,
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
