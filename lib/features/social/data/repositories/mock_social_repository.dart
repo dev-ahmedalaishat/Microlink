@@ -2,6 +2,7 @@ import '../../domain/entities/create_post_params.dart';
 import '../../domain/entities/post.dart';
 import '../../domain/entities/toggle_like_result.dart';
 import '../../domain/entities/user.dart';
+import '../../domain/entities/comment.dart';
 import '../../domain/repositories/social_repository.dart';
 
 class MockSocialRepository implements SocialRepository {
@@ -12,18 +13,56 @@ class MockSocialRepository implements SocialRepository {
       name: 'Jane Smith',
       avatarUrl:
           'https://ui-avatars.com/api/?name=Jane+Smith&background=008080&color=fff',
+      unitDetails: 'Building 1, Unit 205',
     ),
     const User(
       id: '2',
       name: 'John Doe',
       avatarUrl:
           'https://ui-avatars.com/api/?name=John+Doe&background=008080&color=fff',
+      unitDetails: 'Building 5, Unit 101',
     ),
     const User(
       id: '3',
       name: 'Alice Johnson',
       avatarUrl:
           'https://ui-avatars.com/api/?name=Alice+Johnson&background=008080&color=fff',
+      unitDetails: 'Building 2, Unit 304',
+    ),
+    const User(
+      id: 'b780223a-a88c-45da-bea9-70e44d9f2837',
+      name: 'John Doe',
+      avatarUrl:
+          'https://ui-avatars.com/api/?name=John+Doe&background=008080&color=fff',
+      unitDetails: 'Building 5, Unit 101',
+    ),
+    const User(
+      id: '4',
+      name: 'Sarah Wilson',
+      avatarUrl:
+          'https://ui-avatars.com/api/?name=Sarah+Wilson&background=008080&color=fff',
+      unitDetails: 'Building 3, Unit 102',
+    ),
+    const User(
+      id: '5',
+      name: 'Mike Chen',
+      avatarUrl:
+          'https://ui-avatars.com/api/?name=Mike+Chen&background=008080&color=fff',
+      unitDetails: 'Building 4, Unit 201',
+    ),
+    const User(
+      id: '6',
+      name: 'Emma Davis',
+      avatarUrl:
+          'https://ui-avatars.com/api/?name=Emma+Davis&background=008080&color=fff',
+      unitDetails: 'Building 1, Unit 305',
+    ),
+    const User(
+      id: '7',
+      name: 'David Brown',
+      avatarUrl:
+          'https://ui-avatars.com/api/?name=David+Brown&background=008080&color=fff',
+      unitDetails: 'Building 6, Unit 401',
     ),
   ];
 
@@ -210,29 +249,60 @@ class MockSocialRepository implements SocialRepository {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> getComments(String postId) async {
+  Future<List<Comment>> getComments(String postId) async {
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 400));
 
-    // Mock comments data
-    return [
-      {
-        'id': '1',
-        'content': 'I saw a white cat near building 5 this morning!',
-        'author': {'name': 'Sarah Wilson', 'id': '4'},
-        'created_at': DateTime.now()
-            .subtract(const Duration(minutes: 10))
-            .toIso8601String(),
-      },
-      {
-        'id': '2',
-        'content': 'Let me know if you need help searching!',
-        'author': {'name': 'Mike Chen', 'id': '5'},
-        'created_at': DateTime.now()
-            .subtract(const Duration(minutes: 5))
-            .toIso8601String(),
-      },
+    // Generate mock comments for any post
+    final List<Comment> mockComments = [
+      Comment(
+        id: '8a10b424-d362-4c41-bbf3-ad1ccbdc6d06',
+        postId: postId,
+        content:
+            'I used Mike\'s Plumbing last month. Great service! Call 555-0123.',
+        author: _mockUsers.firstWhere(
+          (u) => u.id == 'b780223a-a88c-45da-bea9-70e44d9f2837',
+        ),
+        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+      ),
+      Comment(
+        id: '9b21c535-e473-5d52-ccf4-be2ddc2b7e17',
+        postId: postId,
+        content:
+            'I saw a white cat near building 5 this morning! Let me know if you find him.',
+        author: _mockUsers.firstWhere((u) => u.id == '4'),
+        createdAt: DateTime.now().subtract(const Duration(minutes: 45)),
+      ),
+      Comment(
+        id: '7c32d646-f584-6e63-ddf5-cf3eea3c8f28',
+        postId: postId,
+        content:
+            'Let me know if you need help searching! I walk my dog around that area every evening.',
+        author: _mockUsers.firstWhere((u) => u.id == '5'),
+        createdAt: DateTime.now().subtract(const Duration(minutes: 30)),
+      ),
+      Comment(
+        id: '6d43e757-g695-7f74-eeg6-dg4ffb4d9g39',
+        postId: postId,
+        content: 'Thanks for organizing this! Can\'t wait to meet everyone.',
+        author: _mockUsers.firstWhere((u) => u.id == '6'),
+        createdAt: DateTime.now().subtract(const Duration(minutes: 15)),
+      ),
+      Comment(
+        id: '5e54f868-h7a6-8g85-ffh7-eh5ggh5e0h4a',
+        postId: postId,
+        content: 'Great initiative! This is exactly what our community needs.',
+        author: _mockUsers.firstWhere((u) => u.id == '7'),
+        createdAt: DateTime.now().subtract(const Duration(minutes: 10)),
+      ),
     ];
+
+    // Return a random subset of comments (2-4 comments per post)
+    final postHash = postId.hashCode;
+    final numComments = 2 + (postHash.abs() % 3); // 2-4 comments
+    final startIndex = postHash.abs() % (mockComments.length - numComments + 1);
+
+    return mockComments.sublist(startIndex, startIndex + numComments);
   }
 
   @override

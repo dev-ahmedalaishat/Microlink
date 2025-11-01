@@ -1,5 +1,6 @@
 import '../../domain/entities/create_post_params.dart';
 import '../../domain/entities/post.dart';
+import '../../domain/entities/comment.dart';
 import '../../domain/entities/toggle_like_result.dart';
 import '../../domain/repositories/social_repository.dart';
 import '../datasources/social_remote_datasource.dart';
@@ -84,7 +85,7 @@ class SocialRepositoryImpl implements SocialRepository {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> getComments(String postId) async {
+  Future<List<Comment>> getComments(String postId) async {
     try {
       return await _remoteDataSource.getComments(postId);
     } catch (e) {

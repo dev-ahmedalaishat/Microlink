@@ -8,13 +8,14 @@ import 'injection_container.dart' as di;
 
 // Features
 import 'features/social/presentation/cubit/posts/posts_cubit.dart';
+import 'features/social/domain/repositories/social_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize dependency injection
   await di.init();
-  
+
   runApp(const MainApp());
 }
 
@@ -28,6 +29,10 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<PostsCubit>()),
         BlocProvider(create: (_) => di.sl<MyPostsCubit>()),
         BlocProvider(create: (_) => di.sl<PostCreationCubit>()),
+        // Provide SocialRepository for other widgets to use
+        RepositoryProvider<SocialRepository>(
+          create: (_) => di.sl<SocialRepository>(),
+        ),
       ],
       child: MaterialApp.router(
         title: 'MicroLink',

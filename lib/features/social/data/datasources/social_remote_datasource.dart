@@ -1,5 +1,7 @@
 import 'package:microlink/features/social/data/models/post_model.dart';
 import 'package:microlink/features/social/data/models/create_post_request_model.dart';
+import 'package:microlink/features/social/data/models/comment_model.dart';
+import '../../domain/entities/comment.dart';
 
 import '../../../../../../core/network/api_client.dart';
 
@@ -98,7 +100,7 @@ class SocialRemoteDataSource {
   }
 
   // Get comments for a post
-  Future<List<Map<String, dynamic>>> getComments(String postId) async {
+  Future<List<Comment>> getComments(String postId) async {
     final response = await _apiClient.get('/posts/$postId/comments');
 
     final responseData = response.data;
@@ -112,7 +114,10 @@ class SocialRemoteDataSource {
       data = [];
     }
 
-    return data.map((item) => item as Map<String, dynamic>).toList();
+    return data
+        .map((json) => CommentModel.fromJson(json as Map<String, dynamic>))
+        .map((model) => model.toDomain())
+        .toList();
   }
 
   // Add a comment to a post

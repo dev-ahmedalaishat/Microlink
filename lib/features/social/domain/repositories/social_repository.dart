@@ -1,6 +1,7 @@
 import '../entities/create_post_params.dart';
 import '../entities/post.dart';
 import '../entities/toggle_like_result.dart';
+import '../entities/comment.dart';
 
 abstract class SocialRepository {
   // Posts
@@ -17,7 +18,7 @@ abstract class SocialRepository {
   Future<Post> createPost(CreatePostParams params);
 
   // Comments
-  Future<List<Map<String, dynamic>>> getComments(String postId);
+  Future<List<Comment>> getComments(String postId);
   Future<Map<String, dynamic>> addComment({
     required String postId,
     required String content,
