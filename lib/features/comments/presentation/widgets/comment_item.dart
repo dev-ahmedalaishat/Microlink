@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:microlink/core/extensions/date_extensions.dart';
 import 'package:microlink/core/extensions/widget_extensions.dart';
+import 'package:microlink/core/presentation/expandable_text.dart';
 import 'package:microlink/core/presentation/profile_avatar.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/theme/spacing.dart';
@@ -38,7 +39,7 @@ class CommentItem extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelSmall,
               ),
               SpacerV.s,
-              Text(comment.content),
+              ExpandableText(text: comment.content, maxLines: 3),
             ],
           ),
         ),

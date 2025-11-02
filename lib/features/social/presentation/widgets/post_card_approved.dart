@@ -10,6 +10,7 @@ import 'package:microlink/features/social/domain/repositories/social_repository.
 import 'package:microlink/features/comments/presentation/pages/comments_bottom_sheet.dart';
 import 'package:microlink/features/social/presentation/widgets/media_item_widget.dart';
 import '../../../../core/extensions/widget_extensions.dart';
+import '../../../../core/presentation/expandable_text.dart';
 import '../../domain/entities/post.dart';
 
 class PostCardApproved extends StatefulWidget {
@@ -114,12 +115,11 @@ class _PostCardApprovedState extends State<PostCardApproved>
         // Post header
         SpacerV.l,
         _buildPostHeader().screenPadding(),
-        if (widget.post.status == PostStatus.approved)
-          _buildApprovedPostContent()
-        else
-          _buildNotApprovedPostContent(),
+        _buildApprovedPostContent(),
       ],
-    );
+    ).background(Colors.transparent).onTap(() {
+      _showCommentsBottomSheet(context);
+    });
   }
 
   Widget _buildPostHeader() {
@@ -147,48 +147,12 @@ class _PostCardApprovedState extends State<PostCardApproved>
     );
   }
 
-  Widget _buildNotApprovedPostContent() {
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: AppSpacing.screenPadding,
-        vertical: AppSpacing.md,
-      ),
-      padding: EdgeInsets.all(AppSpacing.sm),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainer,
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withAlpha(128),
-          width: 1,
-        ),
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-      ),
-      child: Opacity(
-        opacity: 0.6,
-        child: Column(
-          children: [
-            // Post content
-            Text(
-              widget.post.content,
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-            ),
-
-            // Media if available
-            if (widget.post.mediaUrls.isNotEmpty) ...[
-              SpacerV.s,
-              _buildMediaSection(padding: EdgeInsetsGeometry.zero),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildApprovedPostContent() {
     return Column(
       children: [
         SpacerV.l,
         // Post content
-        Text(widget.post.content).screenPadding(),
+        ExpandableText(text: widget.post.content).screenPadding(),
         SpacerV.l,
 
         // Media if available
