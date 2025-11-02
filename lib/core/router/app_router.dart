@@ -95,7 +95,7 @@ class _AppRouterState extends State<AppRouter>
           borderRadius: BorderRadius.circular(AppSpacing.radiusCircular),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withAlpha(64),
+              color: Theme.of(context).colorScheme.onSurface.withAlpha(64),
               blurRadius: 8,
               offset: const Offset(0, 4),
               spreadRadius: 0,
@@ -153,67 +153,86 @@ class _AppRouterState extends State<AppRouter>
 
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
         children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
               children: [
-                Text(
-                  'MicroLink',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        'MicroLink',
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Social Feed',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Social Feed',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+                BlocBuilder<ThemeCubit, ThemeMode>(
+                  builder: (context, themeMode) {
+                    final isDark =
+                        themeMode == ThemeMode.dark ||
+                        (themeMode == ThemeMode.system &&
+                            MediaQuery.of(context).platformBrightness ==
+                                Brightness.dark);
+                    return ListTile(
+                      leading: Icon(
+                        isDark ? Icons.light_mode : Icons.dark_mode,
+                      ),
+                      title: Text(isDark ? 'Light Mode' : 'Dark Mode'),
+                      onTap: () {
+                        context.read<ThemeCubit>().toggleTheme();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.settings),
+                  title: const Text('Settings'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    // TODO: Navigate to settings
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.info_outline),
+                  title: const Text('About'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    // TODO: Show about dialog
+                  },
                 ),
               ],
             ),
           ),
-          BlocBuilder<ThemeCubit, ThemeMode>(
-            builder: (context, themeMode) {
-              final isDark =
-                  themeMode == ThemeMode.dark ||
-                  (themeMode == ThemeMode.system &&
-                      MediaQuery.of(context).platformBrightness ==
-                          Brightness.dark);
-              return ListTile(
-                leading: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-                title: Text(isDark ? 'Light Mode' : 'Dark Mode'),
-                onTap: () {
-                  context.read<ThemeCubit>().toggleTheme();
-                  Navigator.pop(context);
-                },
-              );
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: Navigate to settings
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: const Text('About'),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: Show about dialog
-            },
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              'Version 1.2.0',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withAlpha(128),
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       ),
