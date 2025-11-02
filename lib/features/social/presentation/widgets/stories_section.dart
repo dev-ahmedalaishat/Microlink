@@ -3,7 +3,6 @@ import 'package:microlink/core/presentation/story_avatar.dart';
 
 import '../../../../core/presentation/spacing_widgets.dart';
 import '../../../../core/theme/spacing.dart';
-import '../../../../core/theme/text_styles.dart';
 import 'add_story_widget.dart';
 
 class StoriesSection extends StatelessWidget {
@@ -15,7 +14,7 @@ class StoriesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(
@@ -61,7 +60,9 @@ class _StoryItemWidget extends StatelessWidget {
             SpacerV.xs,
             Text(
               label,
-              style: AppTextStyles.caption,
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

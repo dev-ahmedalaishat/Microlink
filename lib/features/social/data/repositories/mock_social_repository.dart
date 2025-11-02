@@ -12,18 +12,56 @@ class MockSocialRepository implements SocialRepository {
       name: 'Jane Smith',
       avatarUrl:
           'https://ui-avatars.com/api/?name=Jane+Smith&background=008080&color=fff',
+      unitDetails: 'Building 1, Unit 205',
     ),
     const User(
       id: '2',
       name: 'John Doe',
       avatarUrl:
           'https://ui-avatars.com/api/?name=John+Doe&background=008080&color=fff',
+      unitDetails: 'Building 5, Unit 101',
     ),
     const User(
       id: '3',
       name: 'Alice Johnson',
       avatarUrl:
           'https://ui-avatars.com/api/?name=Alice+Johnson&background=008080&color=fff',
+      unitDetails: 'Building 2, Unit 304',
+    ),
+    const User(
+      id: 'b780223a-a88c-45da-bea9-70e44d9f2837',
+      name: 'John Doe',
+      avatarUrl:
+          'https://ui-avatars.com/api/?name=John+Doe&background=008080&color=fff',
+      unitDetails: 'Building 5, Unit 101',
+    ),
+    const User(
+      id: '4',
+      name: 'Sarah Wilson',
+      avatarUrl:
+          'https://ui-avatars.com/api/?name=Sarah+Wilson&background=008080&color=fff',
+      unitDetails: 'Building 3, Unit 102',
+    ),
+    const User(
+      id: '5',
+      name: 'Mike Chen',
+      avatarUrl:
+          'https://ui-avatars.com/api/?name=Mike+Chen&background=008080&color=fff',
+      unitDetails: 'Building 4, Unit 201',
+    ),
+    const User(
+      id: '6',
+      name: 'Emma Davis',
+      avatarUrl:
+          'https://ui-avatars.com/api/?name=Emma+Davis&background=008080&color=fff',
+      unitDetails: 'Building 1, Unit 305',
+    ),
+    const User(
+      id: '7',
+      name: 'David Brown',
+      avatarUrl:
+          'https://ui-avatars.com/api/?name=David+Brown&background=008080&color=fff',
+      unitDetails: 'Building 6, Unit 401',
     ),
   ];
 
@@ -207,52 +245,6 @@ class MockSocialRepository implements SocialRepository {
 
     // Return the created post (matching API response)
     return newPost;
-  }
-
-  @override
-  Future<List<Map<String, dynamic>>> getComments(String postId) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 400));
-
-    // Mock comments data
-    return [
-      {
-        'id': '1',
-        'content': 'I saw a white cat near building 5 this morning!',
-        'author': {'name': 'Sarah Wilson', 'id': '4'},
-        'created_at': DateTime.now()
-            .subtract(const Duration(minutes: 10))
-            .toIso8601String(),
-      },
-      {
-        'id': '2',
-        'content': 'Let me know if you need help searching!',
-        'author': {'name': 'Mike Chen', 'id': '5'},
-        'created_at': DateTime.now()
-            .subtract(const Duration(minutes: 5))
-            .toIso8601String(),
-      },
-    ];
-  }
-
-  @override
-  Future<Map<String, dynamic>> addComment({
-    required String postId,
-    required String content,
-    required String userId,
-  }) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 600));
-
-    return {
-      'success': true,
-      'comment': {
-        'id': DateTime.now().millisecondsSinceEpoch.toString(),
-        'content': content,
-        'author': {'name': 'You', 'id': userId},
-        'created_at': DateTime.now().toIso8601String(),
-      },
-    };
   }
 
   @override

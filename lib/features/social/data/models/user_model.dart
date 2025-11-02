@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:microlink/core/constants/app_constants.dart';
 import 'package:microlink/features/social/domain/entities/user.dart';
 
 part 'user_model.freezed.dart';
@@ -19,10 +20,10 @@ class UserModel with _$UserModel {
 }
 
 extension UserModelX on UserModel {
-  User toEntity() => User(
+  User toDomain(String loggedUserId) => User(
     id: id,
-    name: name,
-    avatarUrl: avatarUrl,
+    name: loggedUserId == id ? 'You' : name,
+    avatarUrl: AppConstants.getRandomAvatar(id),
     unitDetails: unitDetails,
     isVerified: isVerified,
   );

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:microlink/core/presentation/snackbar/custom_snackbar.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/features/social/presentation/cubit/posts/posts_state.dart';
 import 'package:microlink/features/social/presentation/widgets/stories_section.dart';
 import '../../../../core/extensions/widget_extensions.dart';
-import '../../../../core/theme/color_palette.dart';
 import '../cubit/posts/posts_cubit.dart';
 import '../widgets/latest_feed_tab.dart';
 import '../widgets/my_posts_feed_tab.dart';
@@ -41,19 +39,7 @@ class _SocialMainPageState extends State<SocialMainPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // title: const Text('Social Feed'),
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () => context.go('/'),
-        ),
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        foregroundColor: Theme.of(context).colorScheme.surface,
-        actions: [
-          IconButton(icon: const Icon(Icons.notifications), onPressed: () {}),
-        ],
-      ),
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
@@ -61,11 +47,18 @@ class _SocialMainPageState extends State<SocialMainPage>
               child: StoriesSection(
                 stories: [
                   // Dummy stories for illustration
-                  StoryItem(label: 'Your Story', imageUrl: ''),
-                  StoryItem(label: "Alice", imageUrl: ''),
-                  StoryItem(label: "Alice", imageUrl: ''),
-                  StoryItem(label: "Alice", imageUrl: ''),
-                  StoryItem(label: "Alice", imageUrl: ''),
+                  StoryItem(
+                    label: "TSC",
+                    imageUrl: 'assets/images/img_tsc.png',
+                  ),
+                  StoryItem(
+                    label: "Micropolis",
+                    imageUrl: 'assets/images/img_micropolis.png',
+                  ),
+                  StoryItem(
+                    label: "Garden",
+                    imageUrl: 'assets/images/img_garden.png',
+                  ),
                 ],
               ).paddingOnly(top: AppSpacing.md),
             ),
@@ -97,6 +90,7 @@ class _SocialMainPageState extends State<SocialMainPage>
                 builder: (context, state) {
                   return CreatePostWidget(
                         onPostClick: (params) {
+                          FocusScope.of(context).unfocus();
                           context.read<PostCreationCubit>().createPost(params);
                         },
                       )
@@ -123,8 +117,11 @@ class _SocialMainPageState extends State<SocialMainPage>
                     context,
                   ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
                   unselectedLabelStyle: Theme.of(context).textTheme.bodyMedium,
-                  indicator: const UnderlineTabIndicator(
-                    borderSide: BorderSide(color: AppColors.primary, width: 3),
+                  indicator: UnderlineTabIndicator(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 3,
+                    ),
                   ),
                   dividerColor: Colors.transparent,
                   dividerHeight: 1,
@@ -158,52 +155,9 @@ class _SocialMainPageState extends State<SocialMainPage>
       ),
 
       // Bottom Navigation with FAB
-      bottomNavigationBar: _buildBottomNavigation(),
-      floatingActionButton: _buildFloatingActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-    );
-  }
-
-  Widget _buildBottomNavigation() {
-    return BottomAppBar(
-      color: AppColors.surface,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavItem(Icons.map, 'Map', false),
-          _buildNavItem(Icons.people, 'Socials', true),
-          _buildNavItem(Icons.home, 'My Unit', false),
-          const SizedBox(width: 48), // Space for FAB
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavItem(IconData icon, String label, bool isActive) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          color: isActive ? AppColors.primary : AppColors.iconInactive,
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: isActive ? AppColors.primary : AppColors.iconInactive,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFloatingActionButton() {
-    return FloatingActionButton(
-      onPressed: () {
-        // Demo: Show different snackbar types
-      },
-      child: const Icon(Icons.add),
+      // bottomNavigationBar: _buildBottomNavigation(),
+      // floatingActionButton: _buildFloatingActionButton(),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 }
@@ -226,13 +180,126 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: Theme.of(context).colorScheme.surface,
       child: _tabBar,
     );
   }
 
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
+    return true;
+  }
+}
+
+// Static Top Bar Profiles Widget
+class StaticTopBarProfiles extends StatelessWidget {
+  const StaticTopBarProfiles({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 145,
+      height: 32,
+      child: Stack(
+        children: [
+          // First Avatar with 'A'
+          Positioned(
+            left: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.surface,
+                  width: 2,
+                ),
+              ),
+              child: CircleAvatar(
+                radius: 14,
+                backgroundColor: Color(0xFF5B7FE5),
+                child: Text(
+                  'A',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Second Avatar with profile image (overlapping)
+          Positioned(
+            left: 22,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.surface,
+                  width: 2,
+                ),
+              ),
+              child: CircleAvatar(
+                radius: 14,
+                backgroundImage: AssetImage('assets/images/img_tsc.png'),
+              ),
+            ),
+          ),
+          // Add button (overlapping)
+          Positioned(
+            left: 44,
+            child: Container(
+              height: 32,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.surface,
+                  width: 2,
+                ),
+                gradient: LinearGradient(
+                  colors: [Color(0xFFFF375F), Color(0xFFFF375F)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    // Handle add action
+                  },
+                  borderRadius: BorderRadius.circular(16),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 16,
+                      right: 6,
+                      top: 4,
+                      bottom: 4,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Add',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(Icons.add, color: Colors.white, size: 12)
+                            .paddingAll(4)
+                            .background(Color(0xFF787880).withAlpha(82))
+                            .radiusXL(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

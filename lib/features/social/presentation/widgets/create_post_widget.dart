@@ -10,6 +10,8 @@ import 'package:microlink/core/theme/text_styles.dart';
 import 'dart:io';
 
 import 'package:microlink/features/social/domain/entities/create_post_params.dart';
+import 'package:microlink/features/social/domain/repositories/social_repository.dart';
+import 'package:microlink/features/social/presentation/widgets/svg_icon_button.dart';
 
 class CreatePostWidget extends StatefulWidget {
   final void Function(CreatePostParams params)? onPostClick;
@@ -102,7 +104,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ProfileAvatar(imageUrl: ''),
+        ProfileAvatar(imageUrl: '', userId: loggedUserId),
         Column(
           children: [
             _buildInlineContent(context),
@@ -149,55 +151,51 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
       child: Row(
         children: [
           for (int i = 0; i < _selectedImages.length; i++)
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(
-                  right: i < _selectedImages.length - 1 ? AppSpacing.sm : 0,
+            Container(
+              margin: EdgeInsets.only(
+                right: i < _selectedImages.length - 1 ? AppSpacing.sm : 0,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.onSurface.withAlpha(51),
                 ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-                  border: Border.all(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withAlpha(51),
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.radiusMedium,
-                      ),
-                      child: Image.file(
-                        File(_selectedImages[i].path),
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
-                      ),
+              ),
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                      AppSpacing.radiusMedium,
                     ),
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: GestureDetector(
-                        onTap: () => _removeImage(i),
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withAlpha(52),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            size: 20,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
+                    child: Image.file(
+                      File(_selectedImages[i].path),
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                    ),
+                  ),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: GestureDetector(
+                      onTap: () => _removeImage(i),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withAlpha(52),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.close,
+                          size: 20,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
+            ).expanded(),
         ],
       ),
     );
@@ -211,24 +209,18 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
           Row(
             children: [
               // Camera icon
-              IconButton(
-                icon: AppSvgPicture(
-                  assetPath: 'assets/icons/ic_camera.svg',
-                  width: AppConstants.iconM,
-                  height: AppConstants.iconM,
-                  matchTextDirection: false,
-                ).paddingAll(AppSpacing.sm),
+              SvgIconButton(
+                assetPath: 'assets/icons/ic_camera.svg',
+                // matchTextDirection: false,
+                size: AppConstants.iconM,
                 onPressed: _selectedImages.length < 2
                     ? () => _pickImage(ImageSource.camera)
                     : null,
               ),
-              IconButton(
-                icon: AppSvgPicture(
-                  assetPath: 'assets/icons/ic_gallery.svg',
-                  width: AppConstants.iconM,
-                  height: AppConstants.iconM,
-                  matchTextDirection: false,
-                ).paddingAll(AppSpacing.sm),
+              SvgIconButton(
+                assetPath: 'assets/icons/ic_gallery.svg',
+                size: AppConstants.iconM,
+                // matchTextDirection: false,
                 onPressed: _selectedImages.length < 2
                     ? () => _pickImage(ImageSource.gallery)
                     : null,
@@ -237,37 +229,30 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
               const Spacer(),
 
               // Post button
-              Container(
-                decoration: BoxDecoration(
-                  color: canPost
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.onSurface.withAlpha(51),
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: canPost ? _handlePost : null,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.xxl,
-                        vertical: AppSpacing.md,
-                      ),
-                      child: Text(
-                        'Post',
-                        style: AppTextStyles.buttonMedium.copyWith(
-                          color: canPost
-                              ? Colors.white
-                              : Theme.of(
-                                  context,
-                                ).colorScheme.onSurface.withAlpha(128),
-                        ),
-                      ),
+              ElevatedButton(
+                onPressed: canPost ? _handlePost : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.primary,
+                  disabledForegroundColor: Colors.white,
+                  padding: const EdgeInsets.all(0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppSpacing.radiusMedium,
                     ),
                   ),
+                  elevation: 0,
                 ),
-              ),
+                child: Text(
+                  'Post',
+                  style: AppTextStyles.buttonMedium.copyWith(
+                    color: Colors.white,
+                  ),
+                ),
+              ).opacity(canPost ? 1.0 : 0.2),
             ],
           ).paddingSymmetric(
             horizontal: AppSpacing.screenPadding,

@@ -173,14 +173,14 @@ class __$$CommentImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$CommentImpl implements _Comment {
+class _$CommentImpl extends _Comment {
   const _$CommentImpl({
     required this.id,
     required this.content,
     required this.author,
     required this.createdAt,
     required this.postId,
-  });
+  }) : super._();
 
   @override
   final String id;
@@ -224,7 +224,7 @@ class _$CommentImpl implements _Comment {
       __$$CommentImplCopyWithImpl<_$CommentImpl>(this, _$identity);
 }
 
-abstract class _Comment implements Comment {
+abstract class _Comment extends Comment {
   const factory _Comment({
     required final String id,
     required final String content,
@@ -232,6 +232,7 @@ abstract class _Comment implements Comment {
     required final DateTime createdAt,
     required final String postId,
   }) = _$CommentImpl;
+  const _Comment._() : super._();
 
   @override
   String get id;

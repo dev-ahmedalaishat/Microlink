@@ -388,3 +388,25 @@ extension WidgetExtensions on Widget {
     );
   }
 }
+
+/// Extension for BuildContext to provide theme-aware helpers
+extension ThemeExtensions on BuildContext {
+  /// Returns the dark version of an image path if dark theme is active.
+  /// Automatically appends '_dark' before the file extension.
+  ///
+  /// Example:
+  /// ```dart
+  /// context.themedImage('assets/images/logo.png')
+  /// // Returns: 'assets/images/logo_dark.png' in dark mode
+  /// // Returns: 'assets/images/logo.png' in light mode
+  /// ```
+  String themedImage(String lightImagePath) {
+    final isDark = Theme.of(this).brightness == Brightness.dark;
+    if (!isDark) return lightImagePath;
+
+    final lastDot = lightImagePath.lastIndexOf('.');
+    if (lastDot == -1) return lightImagePath;
+
+    return '${lightImagePath.substring(0, lastDot)}_dark${lightImagePath.substring(lastDot)}';
+  }
+}

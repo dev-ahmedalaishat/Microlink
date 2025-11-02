@@ -2,6 +2,8 @@ import '../entities/create_post_params.dart';
 import '../entities/post.dart';
 import '../entities/toggle_like_result.dart';
 
+final loggedUserId = 'b780223a-a88c-45da-bea9-70e44d9f2837';
+
 abstract class SocialRepository {
   // Posts
   Future<List<Post>> getLatestPosts({
@@ -15,14 +17,6 @@ abstract class SocialRepository {
     bool forceRefresh = false,
   });
   Future<Post> createPost(CreatePostParams params);
-
-  // Comments
-  Future<List<Map<String, dynamic>>> getComments(String postId);
-  Future<Map<String, dynamic>> addComment({
-    required String postId,
-    required String content,
-    required String userId,
-  });
 
   // Interactions
   Future<ToggleLikeResult> toggleLike({required String postId});

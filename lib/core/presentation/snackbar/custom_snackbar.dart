@@ -72,7 +72,7 @@ class CustomSnackBar {
           ? const Duration(days: 365) // Persistent for loading
           : duration,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.fromLTRB(16, 16, 16, 100),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       action: onTap != null
           ? SnackBarAction(
