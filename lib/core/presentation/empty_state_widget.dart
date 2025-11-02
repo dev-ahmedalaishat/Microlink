@@ -56,7 +56,9 @@ class EmptyStateWidget extends StatelessWidget {
               title!,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withAlpha(150),
               ),
               textAlign: TextAlign.center,
             ),
@@ -66,7 +68,9 @@ class EmptyStateWidget extends StatelessWidget {
             Text(
               description!,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withAlpha(150),
               ),
               textAlign: TextAlign.center,
             ),
@@ -75,10 +79,10 @@ class EmptyStateWidget extends StatelessWidget {
           // Action Button (if callback provided)
           if (onActionButtonPressed != null) ...[
             SpacerV.l,
-            ElevatedButton.icon(
+            ElevatedButton(
               onPressed: onActionButtonPressed,
-              icon: actionButtonIcon ?? const SizedBox.shrink(),
-              label: Text(actionButtonText ?? 'Retry'),
+              // icon: actionButtonIcon ?? const SizedBox.shrink(),
+              child: Text(actionButtonText ?? 'Retry'),
             ).fractionallyWidth(.7),
           ],
         ],
@@ -150,6 +154,7 @@ extension EmptyStateWidgetExt on EmptyStateWidget {
     Key? key,
     String? customTitle,
     String? customDescription,
+    String? imagePath,
     VoidCallback? onActionButtonPressed,
   }) {
     return EmptyStateWidget(
@@ -157,8 +162,7 @@ extension EmptyStateWidgetExt on EmptyStateWidget {
       title: customTitle ?? 'network_error_title',
       description: customDescription ?? 'network_error_description',
       onActionButtonPressed: onActionButtonPressed,
-      imagePath:
-          'assets/illustrations/ill_no_network_connection.svg', // Could add a network error image asset
+      imagePath: imagePath, // Could add a network error image asset
     );
   }
 

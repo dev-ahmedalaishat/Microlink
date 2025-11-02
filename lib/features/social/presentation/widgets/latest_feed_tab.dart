@@ -90,7 +90,7 @@ class _LatestFeedError extends StatelessWidget {
     return EmptyStateWidgetExt.empty(
       customTitle: 'Error Loading Posts',
       customDescription: 'Failed to load posts. Please try again.',
-      imagePath: 'assets/images/ill_no_posts.png',
+      imagePath: context.themedImage('assets/images/ill_no_posts.png'),
       onActionButtonPressed: () {
         context.read<PostsCubit>().refreshPosts();
       },
@@ -104,7 +104,7 @@ class _LatestFeedEmpty extends StatelessWidget {
     return EmptyStateWidgetExt.empty(
       customTitle: 'No Posts Yet',
       customDescription: 'No posts available. Be the first to share!',
-      imagePath: 'assets/images/ill_no_posts.png',
+      imagePath: context.themedImage('assets/images/ill_no_posts.png'),
       onActionButtonPressed: () {
         context.read<PostsCubit>().refreshPosts();
       },

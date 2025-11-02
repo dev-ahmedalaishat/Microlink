@@ -60,3 +60,8 @@ flutter:
     - assets/images/
     - assets/lottie/
   # - assets/illustrations/
+
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto.ttf

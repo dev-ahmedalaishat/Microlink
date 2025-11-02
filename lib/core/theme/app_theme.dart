@@ -8,6 +8,7 @@ class AppTheme {
   AppTheme._();
 
   static ThemeData lightTheme = ThemeData(
+    fontFamily: 'Roboto',
     // Color scheme
     colorScheme: const ColorScheme.light(
       primary: AppColors.primary,
@@ -166,6 +167,7 @@ class AppTheme {
   );
 
   static ThemeData darkTheme = ThemeData(
+    fontFamily: 'Roboto',
     // Color scheme
     colorScheme: const ColorScheme.dark(
       primary: AppColorsDark.primary,

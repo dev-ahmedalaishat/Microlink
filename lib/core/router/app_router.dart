@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
+import 'package:microlink/core/extensions/widget_extensions.dart';
 import 'package:microlink/core/presentation/empty_state_widget.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/core/theme/theme_cubit.dart';
@@ -122,10 +123,16 @@ class _AppRouterState extends State<AppRouter>
           dragStartBehavior: DragStartBehavior.down,
           physics: const NeverScrollableScrollPhysics(),
           children: [
-            _buildComingSoonPage('assets/images/ill_no_map.png'),
+            _buildComingSoonPage(
+              context.themedImage('assets/images/ill_no_map.png'),
+            ),
             SocialMainPage(),
-            _buildComingSoonPage('assets/images/ill_no_folder.png'),
-            _buildComingSoonPage('assets/images/ill_no_folder.png'),
+            _buildComingSoonPage(
+              context.themedImage('assets/images/ill_no_folder.png'),
+            ),
+            _buildComingSoonPage(
+              context.themedImage('assets/images/ill_no_folder.png'),
+            ),
           ],
         ),
       ),

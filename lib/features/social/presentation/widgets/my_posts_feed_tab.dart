@@ -99,7 +99,7 @@ class _MyPostsError extends StatelessWidget {
     return EmptyStateWidgetExt.empty(
       // customTitle: 'Error Loading Posts',
       customDescription: 'Failed to load posts. Please try again.',
-      imagePath: 'assets/images/ill_no_posts.png',
+      imagePath: context.themedImage('assets/images/ill_no_posts.png'),
       onActionButtonPressed: () {
         context.read<PostsCubit>().refreshPosts();
       },
@@ -112,7 +112,7 @@ class _MyPostsEmpty extends StatelessWidget {
   Widget build(BuildContext context) {
     return EmptyStateWidgetExt.empty(
       customDescription: 'You have not created any posts yet.',
-      imagePath: 'assets/images/ill_no_posts.png',
+      imagePath: context.themedImage('assets/images/ill_no_posts.png'),
     ).center();
   }
 }
