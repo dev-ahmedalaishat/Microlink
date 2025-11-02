@@ -46,6 +46,7 @@ class _ExpandableTextState extends State<ExpandableText> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
+              textAlign: TextAlign.start,
               widget.text,
               style: widget.style ?? Theme.of(context).textTheme.bodyMedium,
               maxLines: _isExpanded ? null : widget.maxLines,
@@ -61,6 +62,7 @@ class _ExpandableTextState extends State<ExpandableText> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
+                    textAlign: TextAlign.start,
                     _isExpanded ? 'See less' : 'See more',
                     style:
                         widget.expandButtonStyle ??

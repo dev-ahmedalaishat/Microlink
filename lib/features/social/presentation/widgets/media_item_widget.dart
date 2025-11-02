@@ -34,6 +34,7 @@ class MediaItemWidget extends StatelessWidget {
             height: double.infinity,
             errorBuilder: (context, error, stackTrace) => placeholderIcon,
           )
+          .borderRadius(AppSpacing.postImageRadius)
           .sized(width: width, height: height)
           .backgroundWithBorderRadius(
             Theme.of(context).colorScheme.surfaceContainer,
@@ -52,6 +53,7 @@ class MediaItemWidget extends StatelessWidget {
               height: double.infinity,
               errorBuilder: (context, error, stackTrace) => placeholderIcon,
             )
+            .borderRadius(AppSpacing.postImageRadius)
             .sized(width: width, height: height)
             .backgroundWithBorderRadius(
               Theme.of(context).colorScheme.surfaceContainer,

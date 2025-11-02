@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:microlink/core/constants/app_constants.dart';
 import 'package:microlink/core/extensions/date_extensions.dart';
@@ -149,6 +151,7 @@ class _PostCardApprovedState extends State<PostCardApproved>
 
   Widget _buildApprovedPostContent() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SpacerV.l,
         // Post content
@@ -173,27 +176,15 @@ class _PostCardApprovedState extends State<PostCardApproved>
       horizontal: AppSpacing.screenPadding,
     ),
   }) {
-    final imageHeight = MediaQuery.of(context).size.width * 1.05;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final imageHeight = min(screenWidth, 400) * 1.05;
 
     if (widget.post.mediaUrls.length == 1) {
       final mediaUrl = widget.post.mediaUrls.first;
       return MediaItemWidget(
         mediaUrl: mediaUrl,
-        width: double.infinity,
+        width: screenWidth > 500 ? 400.0 : double.infinity,
         height: imageHeight,
-      ).screenPadding();
-      return Container(
-        width: double.infinity,
-        height: imageHeight,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainer,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          Icons.image,
-          size: 50,
-          color: Theme.of(context).colorScheme.onSurface.withAlpha(128),
-        ),
       ).screenPadding();
     }
     final imageWidth = imageHeight * 0.7;
@@ -211,19 +202,6 @@ class _PostCardApprovedState extends State<PostCardApproved>
             mediaUrl: mediaUrl,
             width: imageWidth,
             height: imageHeight,
-          );
-
-          return Container(
-            width: imageWidth,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainer,
-              borderRadius: BorderRadius.circular(AppSpacing.postImageRadius),
-            ),
-            child: Icon(
-              Icons.image,
-              size: 50,
-              color: Theme.of(context).colorScheme.onSurface.withAlpha(128),
-            ),
           );
         },
       ),

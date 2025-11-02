@@ -101,6 +101,7 @@ class PostCardNotApproved extends StatelessWidget {
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            textAlign: TextAlign.start,
           ),
 
           // Media if available
