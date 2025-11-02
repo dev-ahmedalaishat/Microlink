@@ -61,6 +61,7 @@ class _AppRouterState extends State<AppRouter>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         // title: const Text('Social Feed'),
         leading: Builder(
