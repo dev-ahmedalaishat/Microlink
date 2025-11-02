@@ -28,7 +28,10 @@ class AnimatedBottomNavigation extends StatelessWidget {
         onPageChanged(index);
       },
       indicator: UnderlineTabIndicator(
-        borderSide: BorderSide(color: Colors.black, width: 3),
+        borderSide: BorderSide(
+          color: Theme.of(context).colorScheme.onSurface,
+          width: 3,
+        ),
         insets: const EdgeInsets.fromLTRB(16, 0, 16, 8),
       ),
       tabs: [
@@ -39,7 +42,13 @@ class AnimatedBottomNavigation extends StatelessWidget {
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: 200),
               opacity: currentPage == 0 ? 1.0 : 0.5,
-              child: SvgPicture.asset('assets/icons/ic_map.svg'),
+              child: SvgPicture.asset(
+                'assets/icons/ic_map.svg',
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.onSurface,
+                  BlendMode.srcIn,
+                ),
+              ),
             ),
           ),
         ),
@@ -50,7 +59,13 @@ class AnimatedBottomNavigation extends StatelessWidget {
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: 200),
               opacity: currentPage == 1 ? 1.0 : 0.5,
-              child: SvgPicture.asset('assets/icons/ic_people.svg'),
+              child: SvgPicture.asset(
+                'assets/icons/ic_people.svg',
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.onSurface,
+                  BlendMode.srcIn,
+                ),
+              ),
             ),
           ),
         ),
@@ -61,7 +76,13 @@ class AnimatedBottomNavigation extends StatelessWidget {
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: 200),
               opacity: currentPage == 2 ? 1.0 : 0.5,
-              child: SvgPicture.asset('assets/icons/ic_folder.svg'),
+              child: SvgPicture.asset(
+                'assets/icons/ic_folder.svg',
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.onSurface,
+                  BlendMode.srcIn,
+                ),
+              ),
             ),
           ),
         ),

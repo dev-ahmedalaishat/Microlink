@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:microlink/core/router/app_router_v2.dart';
+import 'package:microlink/core/router/app_router.dart';
 import 'package:microlink/features/comments/presentation/cubit/comments_cubit.dart';
 import 'package:provider/provider.dart';
 
 // Core
 import 'core/theme/app_theme.dart';
+import 'core/theme/theme_cubit.dart';
 import 'injection_container.dart' as di;
 
 // Domain
@@ -33,17 +34,24 @@ class MainApp extends StatelessWidget {
         // Repository providers
         Provider<SocialRepository>(create: (_) => di.sl<SocialRepository>()),
         // Bloc providers
+        BlocProvider(create: (_) => di.sl<ThemeCubit>()),
         BlocProvider(create: (_) => di.sl<PostsCubit>()),
         BlocProvider(create: (_) => di.sl<MyPostsCubit>()),
         BlocProvider(create: (_) => di.sl<PostCreationCubit>()),
         BlocProvider(create: (_) => di.sl<CommentsCubit>()),
       ],
-      child: MaterialApp(
-        title: 'MicroLink',
-        theme: AppTheme.lightTheme,
-        debugShowCheckedModeBanner: false,
-        // routerConfig: AppRouter.router,
-        home: AppRouterV2(),
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+        builder: (context, themeMode) {
+          return MaterialApp(
+            title: 'MicroLink',
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeMode,
+            debugShowCheckedModeBanner: false,
+            // routerConfig: AppRouter.router,
+            home: AppRouter(),
+          );
+        },
       ),
     );
   }

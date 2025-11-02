@@ -8,8 +8,8 @@ class ShimmerWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
+      baseColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+      highlightColor: Theme.of(context).colorScheme.surfaceContainer,
       child: child,
     );
   }

@@ -1,7 +1,9 @@
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Core
 import 'core/network/api_client.dart';
+import 'core/theme/theme_cubit.dart';
 
 // Social Feature
 import 'features/social/data/datasources/social_remote_datasource.dart';
@@ -18,8 +20,15 @@ import 'features/comments/presentation/cubit/comments_cubit.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  //! External
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton(() => sharedPreferences);
+
   //! Core - Network
   sl.registerLazySingleton<ApiClient>(() => ApiClient());
+
+  //! Core - Theme
+  sl.registerLazySingleton(() => ThemeCubit(sl()));
 
   //! Social Feature
   // Data Sources

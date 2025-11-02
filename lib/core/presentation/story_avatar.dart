@@ -32,7 +32,7 @@ class StoryAvatar extends StatelessWidget {
       height: size,
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.orange, width: 2),
       ),

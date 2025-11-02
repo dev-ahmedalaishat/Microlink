@@ -162,6 +162,7 @@ class _CommentsBottomSheetContentState
         ).expanded(),
         SvgIconButton(
           assetPath: 'assets/icons/ic_close.svg',
+          tintColor: Theme.of(context).colorScheme.onSurface,
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -261,7 +262,7 @@ class _CommentsEmpty extends StatelessWidget {
   Widget build(BuildContext context) {
     return EmptyStateWidgetExt.empty(
       customDescription: 'No comments yet. Be the first to comment!',
-      imagePath: 'assets/images/ill_no_comments.png',
+      imagePath: context.themedImage('assets/images/ill_no_comments.png'),
     ).center();
   }
 }
@@ -275,7 +276,7 @@ class _CommentsError extends StatelessWidget {
   Widget build(BuildContext context) {
     return EmptyStateWidgetExt.empty(
       customDescription: 'Error loading comments. Please try again later.',
-      imagePath: 'assets/images/ill_no_comments.png',
+      imagePath: context.themedImage('assets/images/ill_no_comments.png'),
       onActionButtonPressed: onRetryButtonPressed,
     ).center();
   }

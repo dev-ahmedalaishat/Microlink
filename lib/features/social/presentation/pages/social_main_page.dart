@@ -5,10 +5,8 @@ import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/features/social/presentation/cubit/posts/posts_state.dart';
 import 'package:microlink/features/social/presentation/widgets/stories_section.dart';
 import '../../../../core/extensions/widget_extensions.dart';
-import '../../../../core/theme/color_palette.dart';
 import '../cubit/posts/posts_cubit.dart';
 import '../widgets/latest_feed_tab.dart';
-import '../widgets/svg_icon_button.dart';
 import '../widgets/my_posts_feed_tab.dart';
 import '../widgets/create_post_widget.dart';
 
@@ -41,23 +39,7 @@ class _SocialMainPageState extends State<SocialMainPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // title: const Text('Social Feed'),
-        leading: SvgIconButton(
-          assetPath: 'assets/icons/ic_menu.svg',
-          onPressed: () {},
-        ),
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        foregroundColor: Theme.of(context).colorScheme.surface,
-        title: const StaticTopBarProfiles(),
-        actions: [
-          SvgIconButton(
-            assetPath: 'assets/icons/ic_notification.svg',
-            onPressed: () {},
-          ),
-        ],
-      ),
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
@@ -135,8 +117,11 @@ class _SocialMainPageState extends State<SocialMainPage>
                     context,
                   ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
                   unselectedLabelStyle: Theme.of(context).textTheme.bodyMedium,
-                  indicator: const UnderlineTabIndicator(
-                    borderSide: BorderSide(color: AppColors.primary, width: 3),
+                  indicator: UnderlineTabIndicator(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 3,
+                    ),
                   ),
                   dividerColor: Colors.transparent,
                   dividerHeight: 1,
@@ -175,49 +160,6 @@ class _SocialMainPageState extends State<SocialMainPage>
       // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
-
-  Widget _buildBottomNavigation() {
-    return BottomAppBar(
-      color: AppColors.surface,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavItem(Icons.map, 'Map', false),
-          _buildNavItem(Icons.people, 'Socials', true),
-          _buildNavItem(Icons.home, 'My Unit', false),
-          const SizedBox(width: 48), // Space for FAB
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavItem(IconData icon, String label, bool isActive) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          color: isActive ? AppColors.primary : AppColors.iconInactive,
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: isActive ? AppColors.primary : AppColors.iconInactive,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFloatingActionButton() {
-    return FloatingActionButton(
-      onPressed: () {
-        // Demo: Show different snackbar types
-      },
-      child: const Icon(Icons.add),
-    );
-  }
 }
 
 // Delegate for pinned tab bar in NestedScrollView
@@ -238,14 +180,14 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: Theme.of(context).colorScheme.surface,
       child: _tabBar,
     );
   }
 
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
+    return true;
   }
 }
 

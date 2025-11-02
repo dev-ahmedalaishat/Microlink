@@ -28,14 +28,17 @@ class CommentItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(comment.author.name, style: AppTextStyles.userName),
-              SpacerV.xs,
-              Text(comment.createdAt.timeAgo(), style: AppTextStyles.timestamp),
-              SpacerV.s,
               Text(
-                comment.content,
-                style: Theme.of(context).textTheme.bodyMedium,
+                comment.author.name,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
+              SpacerV.xs,
+              Text(
+                comment.createdAt.timeAgo(),
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+              SpacerV.s,
+              Text(comment.content),
             ],
           ),
         ),
@@ -51,6 +54,7 @@ class CommentItem extends StatelessWidget {
         if (!comment.isPending)
           SvgIconButton(
             assetPath: 'assets/icons/ic_more_vert.svg',
+            tintColor: Theme.of(context).colorScheme.onSurface,
             onPressed: () {
               // Show comment options
             },

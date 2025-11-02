@@ -49,8 +49,9 @@ class EmptyStateWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildImageOrIcon(context),
+          SpacerV.m,
           if (title != null) ...[
-            SpacerV.l,
+            SpacerV.m,
             Text(
               title!,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(

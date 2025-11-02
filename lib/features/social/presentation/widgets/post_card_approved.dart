@@ -8,8 +8,7 @@ import 'package:microlink/core/presentation/story_avatar.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/features/social/domain/repositories/social_repository.dart';
 import 'package:microlink/features/comments/presentation/pages/comments_bottom_sheet.dart';
-import 'package:microlink/features/social/presentation/widgets/svg_icon_button.dart';
-import '../../../../core/theme/text_styles.dart';
+import 'package:microlink/features/social/presentation/widgets/media_item_widget.dart';
 import '../../../../core/extensions/widget_extensions.dart';
 import '../../domain/entities/post.dart';
 
@@ -134,10 +133,13 @@ class _PostCardApprovedState extends State<PostCardApproved>
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.post.author.name, style: AppTextStyles.userName),
+            Text(
+              widget.post.author.name,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             Text(
               widget.post.createdAt.timeAgo(),
-              style: AppTextStyles.timestamp,
+              style: Theme.of(context).textTheme.labelSmall,
             ),
           ],
         ).expanded(),
@@ -153,8 +155,11 @@ class _PostCardApprovedState extends State<PostCardApproved>
       ),
       padding: EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        border: Border.all(color: Colors.grey.shade300, width: 1),
+        color: Theme.of(context).colorScheme.surfaceContainer,
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withAlpha(128),
+          width: 1,
+        ),
         borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
       ),
       child: Opacity(
@@ -164,7 +169,7 @@ class _PostCardApprovedState extends State<PostCardApproved>
             // Post content
             Text(
               widget.post.content,
-              style: TextStyle(color: Colors.grey.shade600),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             ),
 
             // Media if available
@@ -207,14 +212,24 @@ class _PostCardApprovedState extends State<PostCardApproved>
     final imageHeight = MediaQuery.of(context).size.width * 1.05;
 
     if (widget.post.mediaUrls.length == 1) {
+      final mediaUrl = widget.post.mediaUrls.first;
+      return MediaItemWidget(
+        mediaUrl: mediaUrl,
+        width: double.infinity,
+        height: imageHeight,
+      ).screenPadding();
       return Container(
         width: double.infinity,
         height: imageHeight,
         decoration: BoxDecoration(
-          color: Colors.grey.shade200,
+          color: Theme.of(context).colorScheme.surfaceContainer,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: const Icon(Icons.image, size: 50, color: Colors.grey),
+        child: Icon(
+          Icons.image,
+          size: 50,
+          color: Theme.of(context).colorScheme.onSurface.withAlpha(128),
+        ),
       ).screenPadding();
     }
     final imageWidth = imageHeight * 0.7;
@@ -227,13 +242,24 @@ class _PostCardApprovedState extends State<PostCardApproved>
         separatorBuilder: (context, index) => SpacerH.xs,
         padding: padding,
         itemBuilder: (context, index) {
+          final mediaUrl = widget.post.mediaUrls[index];
+          return MediaItemWidget(
+            mediaUrl: mediaUrl,
+            width: imageWidth,
+            height: imageHeight,
+          );
+
           return Container(
             width: imageWidth,
             decoration: BoxDecoration(
-              color: Colors.grey.shade200,
+              color: Theme.of(context).colorScheme.surfaceContainer,
               borderRadius: BorderRadius.circular(AppSpacing.postImageRadius),
             ),
-            child: const Icon(Icons.image, size: 50, color: Colors.grey),
+            child: Icon(
+              Icons.image,
+              size: 50,
+              color: Theme.of(context).colorScheme.onSurface.withAlpha(128),
+            ),
           );
         },
       ),
@@ -251,6 +277,9 @@ class _PostCardApprovedState extends State<PostCardApproved>
                 widget.post.isLiked
                     ? 'assets/icons/ic_like.svg'
                     : 'assets/icons/ic_unlike.svg',
+                widget.post.isLiked
+                    ? null
+                    : Theme.of(context).colorScheme.onSurface,
                 _handleLikeTap,
               ),
             ),
@@ -264,6 +293,7 @@ class _PostCardApprovedState extends State<PostCardApproved>
               scale: _commentScaleAnimation,
               child: _buildInteractionButton(
                 'assets/icons/ic_comment.svg',
+                Theme.of(context).colorScheme.onSurface,
                 () => _handleCommentTap(context),
               ),
             ),
@@ -275,6 +305,7 @@ class _PostCardApprovedState extends State<PostCardApproved>
           scale: _shareScaleAnimation,
           child: _buildInteractionButton(
             'assets/icons/ic_share.svg',
+            Theme.of(context).colorScheme.onSurface,
             _handleShareTap,
           ),
         ),
@@ -282,7 +313,11 @@ class _PostCardApprovedState extends State<PostCardApproved>
     );
   }
 
-  Widget _buildInteractionButton(String iconPath, VoidCallback? onTap) {
+  Widget _buildInteractionButton(
+    String iconPath,
+    Color? tint,
+    VoidCallback? onTap,
+  ) {
     // return SvgIconButton(
     //   padding: EdgeInsets.zero,
     //   size: AppConstants.iconM,
@@ -297,6 +332,9 @@ class _PostCardApprovedState extends State<PostCardApproved>
         assetPath: iconPath,
         width: AppConstants.iconM,
         height: AppConstants.iconM,
+        colorFilter: tint != null
+            ? ColorFilter.mode(tint, BlendMode.srcIn)
+            : null,
         matchTextDirection: false,
       ).paddingAll(AppSpacing.sm),
     );
