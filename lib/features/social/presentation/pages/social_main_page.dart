@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
-import 'package:microlink/core/constants/app_constants.dart';
 import 'package:microlink/core/presentation/snackbar/custom_snackbar.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/features/social/presentation/cubit/posts/posts_state.dart';
@@ -11,6 +8,7 @@ import '../../../../core/extensions/widget_extensions.dart';
 import '../../../../core/theme/color_palette.dart';
 import '../cubit/posts/posts_cubit.dart';
 import '../widgets/latest_feed_tab.dart';
+import '../widgets/svg_icon_button.dart';
 import '../widgets/my_posts_feed_tab.dart';
 import '../widgets/create_post_widget.dart';
 
@@ -45,22 +43,19 @@ class _SocialMainPageState extends State<SocialMainPage>
     return Scaffold(
       appBar: AppBar(
         // title: const Text('Social Feed'),
-        leading: IconButton(
-          icon: SvgPicture.asset(
-            'assets/icons/ic_menu.svg',
-            colorFilter: ColorFilter.mode(
-              Theme.of(context).colorScheme.onSurface,
-              BlendMode.srcIn,
-            ),
-          ),
-          onPressed: () => {},
+        leading: SvgIconButton(
+          assetPath: 'assets/icons/ic_menu.svg',
+          onPressed: () {},
         ),
         surfaceTintColor: Colors.transparent,
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.surface,
         title: const StaticTopBarProfiles(),
         actions: [
-          IconButton(icon: const Icon(Icons.notifications), onPressed: () {}),
+          SvgIconButton(
+            assetPath: 'assets/icons/ic_notification.svg',
+            onPressed: () {},
+          ),
         ],
       ),
       body: NestedScrollView(

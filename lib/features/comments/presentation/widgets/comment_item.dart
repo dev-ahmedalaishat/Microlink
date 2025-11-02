@@ -6,6 +6,7 @@ import 'package:microlink/core/presentation/profile_avatar.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/core/theme/text_styles.dart';
+import 'package:microlink/features/social/presentation/widgets/svg_icon_button.dart';
 import '../../domain/entities/comment.dart';
 
 class CommentItem extends StatelessWidget {
@@ -48,17 +49,11 @@ class CommentItem extends StatelessWidget {
             repeat: true,
           ).scale(5).paddingOnly(end: AppSpacing.lg),
         if (!comment.isPending)
-          IconButton(
-            icon: Icon(
-              Icons.more_vert,
-              color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
-              size: 20,
-            ),
+          SvgIconButton(
+            assetPath: 'assets/icons/ic_more_vert.svg',
             onPressed: () {
               // Show comment options
             },
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
           ),
       ],
     ).opacity(comment.isPending ? 0.6 : 1.0);

@@ -5,9 +5,7 @@ class AppColors {
   AppColors._();
 
   // Primary Colors (Teal/Green from design)
-  static const Color primary = Color(0xFF008080);
-  static const Color primaryLight = Color(0xFF4DB6AC);
-  static const Color primaryDark = Color(0xFF00695C);
+  static const Color primary = Color(0xFF006C5D);
 
   // Accent Colors (Red/Coral from Add button)
   static const Color accent = Color(0xFFFF5252);
@@ -37,7 +35,7 @@ class AppColors {
 
   // Story Border (Orange from design)
   static const Color storyBorder = Color(0xFFFF9800);
-  
+
   // Interactive Elements
   static const Color liked = Color(0xFFE91E63);
   static const Color iconInactive = Color(0xFF9E9E9E);

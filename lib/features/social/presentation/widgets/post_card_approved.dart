@@ -8,6 +8,7 @@ import 'package:microlink/core/presentation/story_avatar.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/features/social/domain/repositories/social_repository.dart';
 import 'package:microlink/features/comments/presentation/pages/comments_bottom_sheet.dart';
+import 'package:microlink/features/social/presentation/widgets/svg_icon_button.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/extensions/widget_extensions.dart';
 import '../../domain/entities/post.dart';
@@ -246,7 +247,7 @@ class _PostCardApprovedState extends State<PostCardApproved>
           children: [
             ScaleTransition(
               scale: _likeScaleAnimation,
-              child: _buildIconButton(
+              child: _buildInteractionButton(
                 widget.post.isLiked
                     ? 'assets/icons/ic_like.svg'
                     : 'assets/icons/ic_unlike.svg',
@@ -261,7 +262,7 @@ class _PostCardApprovedState extends State<PostCardApproved>
           children: [
             ScaleTransition(
               scale: _commentScaleAnimation,
-              child: _buildIconButton(
+              child: _buildInteractionButton(
                 'assets/icons/ic_comment.svg',
                 () => _handleCommentTap(context),
               ),
@@ -272,13 +273,23 @@ class _PostCardApprovedState extends State<PostCardApproved>
         SpacerH.xs,
         ScaleTransition(
           scale: _shareScaleAnimation,
-          child: _buildIconButton('assets/icons/ic_share.svg', _handleShareTap),
+          child: _buildInteractionButton(
+            'assets/icons/ic_share.svg',
+            _handleShareTap,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildIconButton(String iconPath, VoidCallback? onTap) {
+  Widget _buildInteractionButton(String iconPath, VoidCallback? onTap) {
+    // return SvgIconButton(
+    //   padding: EdgeInsets.zero,
+    //   size: AppConstants.iconM,
+    //   assetPath: iconPath,
+    //   onPressed: onTap,
+    // );
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppSpacing.radiusCircular),

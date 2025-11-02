@@ -7,6 +7,7 @@ import 'package:microlink/core/presentation/shimmer/comments_shimmer.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/features/social/domain/repositories/social_repository.dart';
+import 'package:microlink/features/social/presentation/widgets/svg_icon_button.dart';
 import 'package:microlink/injection_container.dart';
 import '../../domain/entities/comment.dart';
 import '../cubit/comments_cubit.dart';
@@ -40,6 +41,7 @@ class CommentsBottomSheetContent extends StatefulWidget {
 class _CommentsBottomSheetContentState
     extends State<CommentsBottomSheetContent> {
   final TextEditingController _commentController = TextEditingController();
+  ScrollController? _scrollController;
   bool _hasText = false;
 
   @override
@@ -53,6 +55,18 @@ class _CommentsBottomSheetContentState
     _commentController.removeListener(_onTextChanged);
     _commentController.dispose();
     super.dispose();
+  }
+
+  void _scrollToEnd() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (_scrollController?.hasClients ?? false) {
+        _scrollController!.animateTo(
+          _scrollController!.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   void _onTextChanged() {
@@ -78,6 +92,7 @@ class _CommentsBottomSheetContentState
         maxChildSize: 0.95,
         expand: false,
         builder: (context, scrollController) {
+          _scrollController = scrollController;
           return Container(
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
@@ -145,13 +160,11 @@ class _CommentsBottomSheetContentState
             context,
           ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ).expanded(),
-        IconButton(
-          padding: EdgeInsets.zero,
-          onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(
-            Icons.close,
-            color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
-          ).paddingAll(AppSpacing.md),
+        SvgIconButton(
+          assetPath: 'assets/icons/ic_close.svg',
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
       ],
     ).paddingSymmetric(
@@ -215,6 +228,8 @@ class _CommentsBottomSheetContentState
                         postId: widget.postId,
                         content: content,
                       );
+
+                      _scrollToEnd();
                     }
                   },
                   style: TextButton.styleFrom(
