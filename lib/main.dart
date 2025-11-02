@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:microlink/core/router/app_router_v2.dart';
+import 'package:microlink/features/comments/presentation/cubit/comments_cubit.dart';
 import 'package:provider/provider.dart';
 
 // Core
@@ -12,7 +13,6 @@ import 'features/social/domain/repositories/social_repository.dart';
 
 // Features
 import 'features/social/presentation/cubit/posts/posts_cubit.dart';
-import 'features/social/presentation/cubit/comments/comments_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

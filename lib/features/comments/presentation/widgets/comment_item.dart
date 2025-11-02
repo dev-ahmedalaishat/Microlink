@@ -6,10 +6,10 @@ import 'package:microlink/core/presentation/profile_avatar.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/core/theme/text_styles.dart';
-import '../../domain/entities/comment.dart' as domain;
+import '../../domain/entities/comment.dart';
 
 class CommentItem extends StatelessWidget {
-  final domain.Comment comment;
+  final Comment comment;
 
   const CommentItem({super.key, required this.comment});
 

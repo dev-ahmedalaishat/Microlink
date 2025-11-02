@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'user.dart';
+import '../../../social/domain/entities/user.dart';
 
 part 'comment.freezed.dart';
 

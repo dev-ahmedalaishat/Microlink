@@ -1,11 +1,8 @@
 import 'package:microlink/features/social/data/models/post_model.dart';
 import 'package:microlink/features/social/data/models/create_post_request_model.dart';
-import 'package:microlink/features/social/data/models/comment_model.dart';
 import 'package:microlink/features/social/domain/entities/post.dart';
 import 'package:microlink/features/social/domain/repositories/social_repository.dart';
-import '../../domain/entities/comment.dart';
-
-import '../../../../../../core/network/api_client.dart';
+import '../../../../core/network/api_client.dart';
 
 class SocialRemoteDataSource {
   final ApiClient _apiClient;
@@ -76,45 +73,6 @@ class SocialRemoteDataSource {
       throw Exception('Invalid response format');
     }
     return PostModel.fromJson(postData).toDomain(loggedUserId);
-  }
-
-  // Get comments for a post
-  Future<List<Comment>> getComments(String postId) async {
-    final response = await _apiClient.get('/posts/$postId/comments');
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    final responseData = response.data;
-    final List<dynamic> data;
-
-    if (responseData is List) {
-      data = responseData;
-    } else if (responseData is Map<String, dynamic>) {
-      data = responseData['comments'] ?? responseData['data'] ?? [];
-    } else {
-      data = [];
-    }
-
-    return data
-        .map((json) => CommentModel.fromJson(json as Map<String, dynamic>))
-        .map((model) => model.toDomain(loggedUserId))
-        .toList();
-  }
-
-  // Add a comment to a post
-  Future<Comment> addComment({
-    required String postId,
-    required String content,
-    required String userId,
-  }) async {
-    final response = await _apiClient.post(
-      '/posts/$postId/comments',
-      data: {'content': content, 'user_id': userId},
-    );
-    await Future.delayed(const Duration(milliseconds: 500));
-    final responseData = response.data;
-    return CommentModel.fromJson(
-      responseData as Map<String, dynamic>,
-    ).toDomain(loggedUserId);
   }
 
   // Toggle like on a post

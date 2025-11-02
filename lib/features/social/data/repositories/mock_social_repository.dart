@@ -2,7 +2,6 @@ import '../../domain/entities/create_post_params.dart';
 import '../../domain/entities/post.dart';
 import '../../domain/entities/toggle_like_result.dart';
 import '../../domain/entities/user.dart';
-import '../../domain/entities/comment.dart';
 import '../../domain/repositories/social_repository.dart';
 
 class MockSocialRepository implements SocialRepository {
@@ -246,92 +245,6 @@ class MockSocialRepository implements SocialRepository {
 
     // Return the created post (matching API response)
     return newPost;
-  }
-
-  @override
-  Future<List<Comment>> getComments(String postId) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 400));
-
-    return [];
-
-    // Generate mock comments for any post
-    final List<Comment> mockComments = [
-      Comment(
-        id: '8a10b424-d362-4c41-bbf3-ad1ccbdc6d06',
-        postId: postId,
-        content:
-            'I used Mike\'s Plumbing last month. Great service! Call 555-0123.',
-        author: _mockUsers.firstWhere(
-          (u) => u.id == 'b780223a-a88c-45da-bea9-70e44d9f2837',
-        ),
-        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-      ),
-      Comment(
-        id: '9b21c535-e473-5d52-ccf4-be2ddc2b7e17',
-        postId: postId,
-        content:
-            'I saw a white cat near building 5 this morning! Let me know if you find him.',
-        author: _mockUsers.firstWhere((u) => u.id == '4'),
-        createdAt: DateTime.now().subtract(const Duration(minutes: 45)),
-      ),
-      Comment(
-        id: '7c32d646-f584-6e63-ddf5-cf3eea3c8f28',
-        postId: postId,
-        content:
-            'Let me know if you need help searching! I walk my dog around that area every evening.',
-        author: _mockUsers.firstWhere((u) => u.id == '5'),
-        createdAt: DateTime.now().subtract(const Duration(minutes: 30)),
-      ),
-      Comment(
-        id: '6d43e757-g695-7f74-eeg6-dg4ffb4d9g39',
-        postId: postId,
-        content: 'Thanks for organizing this! Can\'t wait to meet everyone.',
-        author: _mockUsers.firstWhere((u) => u.id == '6'),
-        createdAt: DateTime.now().subtract(const Duration(minutes: 15)),
-      ),
-      Comment(
-        id: '5e54f868-h7a6-8g85-ffh7-eh5ggh5e0h4a',
-        postId: postId,
-        content: 'Great initiative! This is exactly what our community needs.',
-        author: _mockUsers.firstWhere((u) => u.id == '7'),
-        createdAt: DateTime.now().subtract(const Duration(minutes: 10)),
-      ),
-    ];
-
-    // Return a random subset of comments (2-4 comments per post)
-    final postHash = postId.hashCode;
-    final numComments = 2 + (postHash.abs() % 3); // 2-4 comments
-    final startIndex = postHash.abs() % (mockComments.length - numComments + 1);
-
-    return mockComments.sublist(startIndex, startIndex + numComments);
-  }
-
-  @override
-  Future<Comment> addComment({
-    required String postId,
-    required String content,
-  }) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 600));
-
-    // Find the user who is adding the comment
-    final User author = _mockUsers.firstWhere(
-      (user) => user.id == "1",
-      orElse: () =>
-          const User(id: '1', name: 'You', unitDetails: 'Building 1, Unit 101'),
-    );
-
-    // Create new comment matching API response structure
-    final Comment newComment = Comment(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      postId: postId,
-      content: content,
-      author: author,
-      createdAt: DateTime.now(),
-    );
-
-    return newComment;
   }
 
   @override

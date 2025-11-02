@@ -7,11 +7,11 @@ import 'package:microlink/core/presentation/shimmer/comments_shimmer.dart';
 import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/features/social/domain/repositories/social_repository.dart';
-import '../../../../injection_container.dart';
+import 'package:microlink/injection_container.dart';
 import '../../domain/entities/comment.dart';
-import '../cubit/comments/comments_cubit.dart';
-import '../cubit/comments/comments_state.dart';
-import 'comment_item.dart';
+import '../cubit/comments_cubit.dart';
+import '../cubit/comments_state.dart';
+import '../widgets/comment_item.dart';
 
 class CommentsBottomSheet extends StatelessWidget {
   final String postId;
@@ -207,7 +207,6 @@ class _CommentsBottomSheetContentState
                       // Hide keyboard
                       FocusScope.of(context).unfocus();
 
-                      // Get current user ID (in a real app, this would come from auth)
                       final commentsCubit = context.read<CommentsCubit>();
 
                       _commentController.clear();

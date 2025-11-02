@@ -7,10 +7,10 @@ import 'package:microlink/core/presentation/spacing_widgets.dart';
 import 'package:microlink/core/presentation/story_avatar.dart';
 import 'package:microlink/core/theme/spacing.dart';
 import 'package:microlink/features/social/domain/repositories/social_repository.dart';
+import 'package:microlink/features/comments/presentation/pages/comments_bottom_sheet.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/extensions/widget_extensions.dart';
 import '../../domain/entities/post.dart';
-import 'comments_bottom_sheet.dart';
 
 class PostCardApproved extends StatefulWidget {
   final Post post;

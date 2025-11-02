@@ -1,12 +1,13 @@
 import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../domain/entities/comment.dart';
-import '../../../domain/entities/user.dart';
-import '../../../domain/repositories/social_repository.dart';
+import '../../../social/domain/entities/user.dart';
+import '../../../social/domain/repositories/social_repository.dart';
+import '../../domain/entities/comment.dart';
+import '../../domain/repositories/comments_repository.dart';
 import 'comments_state.dart';
 
 class CommentsCubit extends Cubit<CommentsState> {
-  final SocialRepository _repository;
+  final CommentsRepository _repository;
   final Random _random = Random();
 
   CommentsCubit(this._repository) : super(const CommentsState.initial());
